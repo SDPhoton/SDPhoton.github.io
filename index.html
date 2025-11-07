@@ -1,0 +1,1630 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KCG / KCGI — Advanced 3D Portal</title>
+    
+    <!-- Load Poppins Font for clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load Lucide Icons for navigation -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Load Three.js for 3D GPU Acceleration -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        /* Global & Utility Styles */
+        :root {
+            --color-primary: #0077b6; /* Deep KCG Blue */
+            --color-secondary: #00b4d8; /* Light Blue Accent */
+            --color-accent: #f97316; /* Orange Highlight */
+            --color-bg: #f5f9fc;
+            --color-card: #ffffff;
+            --color-text: #1d3557;
+            --shadow-deep: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --radius: 20px;
+        }
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--color-bg); 
+            color: var(--color-text); 
+            overflow-x: hidden;
+            /* Hide default cursor for 3D effect */
+            cursor: none !important; 
+            line-height: 1.6;
+        }
+
+        /* 3D Cursor Canvas Style */
+        #pointer-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Highest Z-index */
+            z-index: 10000; 
+            /* Crucial: Allows all clicks to pass through */
+            pointer-events: none; 
+        }
+        
+        /* Header and Navigation Styles */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 10px 20px;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: var(--color-primary);
+            letter-spacing: -1px;
+        }
+        nav {
+            display: flex;
+            background: #e0f7fa;
+            border-radius: 50px;
+            padding: 4px;
+            flex-wrap: wrap; 
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 18px;
+            margin: 0 2px;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            color: var(--color-text);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+        .nav-link.active {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.5);
+        }
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        /* Main Content Area */
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            display: none;
+            min-height: 70vh;
+            padding-bottom: 60px;
+        }
+        .page-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        /* New Highlight Style */
+        .highlighted-text {
+            color: var(--color-accent); /* Orange Highlight */
+            font-weight: 700;
+        }
+
+        /* --- Page Specific Styles --- */
+
+        /* Hero Banner */
+        .hero {
+            padding: 70px 40px;
+            border-radius: var(--radius);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-deep);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 8px solid var(--color-accent);
+        }
+        
+        /* NEW: 3D Hero Canvas */
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15; /* Blend it into the background */
+            filter: blur(2px);
+        }
+
+        /* NEW: Hero content must be on top of the 3D canvas */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .hero h1 { font-size: 3rem; margin-top: 0; font-weight: 800; line-height: 1.1; }
+        .hero p { font-size: 1.15rem; opacity: 0.9; margin-bottom: 0; font-weight: 300; }
+        
+        /* Dashboard Hero (Home) */
+        #home .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #48cae4 100%);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        .card {
+            background: var(--color-card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid var(--color-secondary);
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-deep); }
+        .card h2 { color: var(--color-text); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; font-size: 1.4rem; font-weight: 700; }
+        
+        .history-card { grid-column: span 1; }
+        .full-width { grid-column: 1 / -1; }
+
+        /* === Static Image Card Styling === */
+        .image-card {
+            background: #1d3557;
+            border: none;
+            padding: 0; /* No padding for image card */
+            min-height: 350px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius);
+            opacity: 0.8;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .image-card:hover img {
+            opacity: 1;
+            transform: scale(1.03);
+        }
+        .image-card .image-card-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            color: white;
+            padding: 40px 30px 25px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+        .static-image-placeholder {
+            width: 100%;
+            height: 350px; /* Ensure consistent height */
+            object-fit: cover; /* Cover the area */
+            border-radius: var(--radius); /* Match card radius */
+        }
+        
+        /* --- New Quick Access Card Styles (Home) --- */
+        .quick-access-card {
+            background: linear-gradient(135deg, #e0f7fa 0%, #f5f9fc 100%);
+            border-left-color: var(--color-primary);
+        }
+        .quick-links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .quick-link {
+            display: flex;
+            align-items: center;
+            background: var(--color-card);
+            color: var(--color-primary);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #d0eafc;
+            cursor: pointer;
+        }
+        .quick-link:hover {
+            background: var(--color-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 119, 182, 0.3);
+        }
+        .quick-link svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        /* Detail Pages Layout (Subcolumns) */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .detail-section {
+            background: var(--color-card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid;
+        }
+        .detail-section h2 { 
+            font-size: 1.6rem; 
+            margin-top: 0; 
+            color: var(--color-primary);
+            padding-bottom: 5px;
+        }
+        
+        /* --- Animated Bubble/Column Styles --- */
+        .bubble-flow {
+            display: flex;
+            flex-direction: column; 
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-bubble {
+            background-color: var(--color-bg); 
+            padding: 18px;
+            /* Cloud/Bubble Shape: Rounded top-left/bottom-right corners */
+            border-radius: 20px 5px 20px 5px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0f0f8;
+            cursor: default;
+            transition: all 0.3s ease;
+            
+            /* Animation for entry */
+            animation: fadeInScale 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px) scale(0.98);
+        }
+
+        .info-bubble:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-secondary);
+        }
+
+        /* Staggered animation for sequential appearance */
+        .bubble-flow .info-bubble:nth-child(1) { animation-delay: 0.0s; }
+        .bubble-flow .info-bubble:nth-child(2) { animation-delay: 0.1s; }
+        .bubble-flow .info-bubble:nth-child(3) { animation-delay: 0.2s; }
+        .bubble-flow .info-bubble:nth-child(4) { animation-delay: 0.3s; }
+        .bubble-flow .info-bubble:nth-child(5) { animation-delay: 0.4s; }
+        .bubble-flow .info-bubble:nth-child(6) { animation-delay: 0.5s; } 
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .info-bubble strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .info-bubble p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            margin-bottom: 10px; /* Space before link footer */
+        }
+        
+        /* New Link Footer Style */
+        .info-bubble .link-footer {
+            border-top: 1px dashed #c0d8e8;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+        
+        .info-bubble .link-footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.2s;
+            margin-right: 15px; /* Spacing between multiple links */
+        }
+        .info-bubble .link-footer a:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        /* Cleanup: remove old bullet styles */
+        .detail-section ul { list-style: none; padding: 0; }
+        .detail-section li { margin-bottom: 0; padding: 0; }
+
+
+        /* Academics Styling */
+        #academics .hero {
+            background: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
+            border-bottom-color: #a8dadc;
+        }
+        #academics .detail-section { border-top-color: #457b9d; }
+
+        /* Research Styling */
+        #research .hero {
+            background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
+            border-bottom-color: #e9c46a;
+        }
+        #research .detail-section { border-top-color: #2a9d8f; }
+
+        /* Kyoto Life Styling */
+        #kyoto .hero {
+            background: linear-gradient(135deg, #fb8500 0%, #ffb703 100%);
+            border-bottom-color: #023e8a;
+        }
+        #kyoto .detail-section { border-top-color: #fb8500; }
+        
+        /* Explore Kyoto Styling */
+        #explore .hero {
+            background: linear-gradient(135deg, #008080 0%, #2a9d8f 100%);
+            border-bottom-color: #e9c46a;
+        }
+        #explore .detail-section { border-top-color: #008080; }
+
+        /* Logistics Guide Styling */
+        #guide .hero {
+            background: linear-gradient(135deg, #7b0053 0%, #b5179e 100%);
+            border-bottom-color: #48cae4;
+        }
+        #guide .detail-section { border-top-color: #7b0053; }
+        
+        /* Support Styling */
+        #support .hero {
+            background: linear-gradient(135deg, #e63946 0%, #f1faee 100%);
+            border-bottom-color: #1d3557;
+        }
+        #support .detail-section { border-top-color: #e63946; }
+
+        /* --- New Kyoto Highlights Styles (Explore Page) --- */
+        .highlight-section {
+            background: var(--color-card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid;
+        }
+        .highlight-subtitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 25px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-bg);
+        }
+        .highlight-subtitle:first-of-type {
+            margin-top: 0;
+        }
+
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .highlight-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-deep);
+        }
+        
+        .highlight-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .highlight-content {
+            padding: 20px 25px 25px 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Makes card content fill space */
+        }
+        
+        .highlight-content strong {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+        
+        .highlight-content p {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            margin: 0;
+            flex-grow: 1; /* Pushes link to the bottom */
+            margin-bottom: 15px;
+        }
+        
+        .highlight-link {
+            font-weight: 700;
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color 0.2s;
+            align-self: flex-start; /* Aligns link to the left */
+        }
+        .highlight-link:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1000px) {
+            .dashboard-grid, .detail-layout, .highlight-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .full-width { 
+                grid-column: 1 / -1;
+            }
+            .nav-container { flex-direction: column; }
+            .logo { margin-bottom: 10px; }
+            nav { padding: 4px; flex-wrap: wrap; justify-content: center; }
+            .nav-link { font-size: 0.8rem; padding: 8px 10px; margin: 2px; }
+            .nav-link span { display: none; } 
+            .nav-link svg { margin-right: 0; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 3D CURSOR CANVAS OVERLAY -->
+    <canvas id="pointer-canvas"></canvas>
+
+    <!-- Header and Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">KCG / KCGI Portal</div>
+            
+            <nav id="main-nav">
+                <a href="#home" onclick="showPage('home', event)" class="nav-link" data-page="home">
+                    <script>document.write(lucide.createIcons.layoutDashboard.toSvg());</script>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#academics" onclick="showPage('academics', event)" class="nav-link" data-page="academics">
+                    <script>document.write(lucide.createIcons.graduationCap.toSvg());</script>
+                    <span>Academics</span>
+                </a>
+                <a href="#research" onclick="showPage('research', event)" class="nav-link" data-page="research">
+                    <script>document.write(lucide.createIcons.cpu.toSvg());</script>
+                    <span>Research</span>
+                </a>
+                <a href="#kyoto" onclick="showPage('kyoto', event)" class="nav-link" data-page="kyoto">
+                    <script>document.write(lucide.createIcons.mountain.toSvg());</script>
+                    <span>Kyoto Life</span>
+                </a>
+                <a href="#explore" onclick="showPage('explore', event)" class="nav-link" data-page="explore">
+                    <script>document.write(lucide.createIcons.compass.toSvg());</script>
+                    <span>Explore</span>
+                </a>
+                <a href="#guide" onclick="showPage('guide', event)" class="nav-link" data-page="guide">
+                    <script>document.write(lucide.createIcons.map.toSvg());</script>
+                    <span>Logistics Guide</span>
+                </a>
+                <a href="#support" onclick="showPage('support', event)" class="nav-link" data-page="support">
+                    <script>document.write(lucide.createIcons.lifeBuoy.toSvg());</script>
+                    <span>Support</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area (Simulated Tabs) -->
+    <main>
+        <!-- ============================================== -->
+        <!-- 1. HOME PAGE (DASHBOARD) -->
+        <!-- ============================================== -->
+        <section id="home" class="page-content active">
+            <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>Welcome to the KCG / KCGI Student Hub.</h1>
+                    <p>Navigate your advanced studies in informatics and cultural immersion in the historic city of Kyoto.</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                
+                <!-- History of KCG/KCGI Card -->
+                <div class="card history-card" style="border-left-color: var(--color-accent);">
+                    <h2>The KCG / KCGI Story</h2>
+                    <p>Founded in 1963, The Kyoto College of Graduate Studies for Informatics (KCGI) and its parent institution, KCG, represent Japan's first IT-focused educational institutions. Our mission is to produce highly skilled informatics professionals capable of leading global innovation. KCGI specifically focuses on <span class="highlighted-text">applied information technology</span> within the context of <span class="highlighted-text">management and entrepreneurship</span>.</p>
+                    <p>We are proud to stand at the intersection of technology's future and Kyoto's deep cultural history.</p>
+                </div>
+
+                <!-- History of Kyoto Card -->
+                <div class="card history-card">
+                    <h2>History of Kyoto: The Ancient Capital</h2>
+                    <p>Kyoto served as Japan's imperial capital for over a thousand years (794 to 1868), originally named Heian-kyō. It is the heart of traditional Japanese culture, renowned for its <span class="highlighted-text">17 UNESCO World Heritage Sites</span>, including temples, shrines, and gardens. Unlike many other major Japanese cities, Kyoto was largely spared from the destruction of WWII, preserving its historical integrity. </p>
+                    <p>Studying here means engaging daily with this living history.</p>
+                </div>
+                
+                <!-- Quick Access Card -->
+                <div class="card full-width quick-access-card">
+                    <h2>Kyoto Quick Access</h2>
+                    <p>Explore the city's highlights, from ancient temples to seasonal festivals.</p>
+                    <div class="quick-links-container">
+                        <a onclick="showPage('explore', event); setTimeout(() => document.getElementById('explore-temples').scrollIntoView({ behavior: 'smooth' }), 300);" class="quick-link">
+                            <script>document.write(lucide.createIcons.landmark.toSvg());</script>
+                            <span>Iconic Temples</span>
+                        </a>
+                        <a onclick="showPage('explore', event); setTimeout(() => document.getElementById('explore-cuisine').scrollIntoView({ behavior: 'smooth' }), 300);" class="quick-link">
+                            <script>document.write(lucide.createIcons.coffee.toSvg());</script>
+                            <span>Kyoto Cuisine</span>
+                        </a>
+                        <a onclick="showPage('explore', event); setTimeout(() => document.getElementById('explore-events').scrollIntoView({ behavior: 'smooth' }), 300);" class="quick-link">
+                            <script>document.write(lucide.createIcons.calendar.toSvg());</script>
+                            <span>Seasonal Events</span>
+                        </a>
+                        <a onclick="showPage('explore', event); setTimeout(() => document.getElementById('explore-seasons').scrollIntoView({ behavior: 'smooth' }), 300);" class="quick-link">
+                             <script>document.write(lucide.createIcons.cloudSun.toSvg());</script>
+                            <span>Guide by Season</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Static Image Card -->
+                <div class="card full-width image-card">
+                    <img src="https://images.unsplash.com/photo-1579800314112-716b8042456b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+                         alt="Modern architecture of the KCG KCGI campus in Kyoto"
+                         class="static-image-placeholder"
+                         onerror="this.src='https://placehold.co/1200x350/1d3557/ffffff?text=KCG+Campus+Image'">
+                    
+                    <div class="image-card-caption">
+                        KCG/KCGI: Blending tradition and informatics in the heart of Kyoto.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 2. ACADEMICS PAGE - CONCENTRATIONS & RESOURCES -->
+        <!-- ============================================== -->
+        <section id="academics" class="page-content">
+             <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>KCGI Academics: Concentrations & Study Resources</h1>
+                    <p>Explore the focused fields of study and the specific skills you will master during your program.</p>
+                </div>
+            </div>
+            <div class="detail-layout">
+                <div class="detail-section">
+                    <h2>Fields of Concentration</h2>
+                    <p style="color: #457b9d; font-weight: 600;">KCGI focuses on practical, in-demand IT specializations.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Business Data Analytics</strong>
+                            <p>Master data science, machine learning, and big data analysis to drive business decisions.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>IT Entrepreneurship</strong>
+                            <p>Learn to formulate business plans, manage tech startups, and lead IT project innovation.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Web Systems Development</strong>
+                            <p>Deep dive into modern web architecture, full-stack development, and secure application design.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>IT Manga and Anime</strong>
+                            <p>A unique concentration blending media technology with digital content creation and business.</p>
+                            <div class="link-footer">
+                                See concentrations: <a href="https://www.kcg.edu/en/curriculum/concentration" target="_blank">KCGI Official Site</a>
+                            </div>
+                        </div>
+                         <div class="info-bubble">
+                            <strong>Network Administration</strong>
+                            <p>Focus on next-generation network infrastructure, cloud computing, and cybersecurity.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h2>Study & Collaboration Resources</h2>
+                    <p style="color: #457b9d; font-weight: 600;">Tools and tips for maximizing your academic output.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Master Project Focus</strong>
+                            <p>Your "Master Project" is a core part of the curriculum. Start discussions with your advisor early to define a practical, industry-relevant topic.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Bespoke Curriculum</strong>
+                            <p>KCGI allows a "Bespoke" (custom) curriculum. Meet with your academic coordinator to design a study model that fits your specific career goals.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>KING LMS Platform</strong>
+                            <p>The King LMS is your central hub. Check it daily for course materials, assignments, and official announcements.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Networking & Language</strong>
+                            <p>Actively seek networking opportunities. Commit to practicing Japanese daily to maximize your industry and cultural integration.</p>
+                            <div class="link-footer">
+                                Japanese Practice: <a href="https://www.nhk.or.jp/lesson/" target="_blank">NHK World - Japanese Lessons</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ============================================== -->
+        <!-- 3. RESEARCH PAGE - CLUSTER STATUS & TOOLS -->
+        <!-- ============================================== -->
+        <section id="research" class="page-content">
+             <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>KCGI Research Resources & Applied Projects</h1>
+                    <p>KCGI focuses on applied technology and practical master projects, supported by unique research bodies.</p>
+                </div>
+            </div>
+            <div class="detail-layout">
+                <div class="detail-section">
+                    <h2>Research & Applied Project Centers</h2>
+                    <p style="color: #2a9d8f; font-weight: 600;">Key institutions at KCG/KCGI for applied informatics.</p>
+                    
+                    <div class="bubble-flow" style="margin-top: 20px;">
+                        <div class="info-bubble">
+                            <strong>The Master Project</strong>
+                            <p>The capstone of your degree. This is a practical, student-led project to solve a real-world problem, guided by a faculty sponsor.</p>
+                             <div class="link-footer">
+                                Learn more: <a href="https://www.kcg.edu/en/curriculum/master-project" target="_blank">Master Project Details</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Cyber Kyoto Laboratory (CKL)</strong>
+                            <p>A research institute focusing on cybersecurity, IoT, and regional information systems, often collaborating with local government and industry.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>KCG Museum</strong>
+                            <p>Japan's first distributed computer museum. A unique resource for studying the history of informatics, with rare historical hardware.</p>
+                             <div class="link-footer">
+                                Visit: <a href="https://www.kcg.ac.jp/museum/en/" target="_blank">KCG Museum Site</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Japan Society for Applied Information</strong>
+                            <p>KCGI hosts the office for this academic society, providing close access to symposiums and publications on applied IT.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h2>Research Tools & Links</h2>
+                    <p style="color: #2a9d8f; font-weight: 600;">Essential links for thesis planning, academic journals, and technical documentation.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Faculty Profiles</strong>
+                            <p>Explore faculty specializations to find an advisor whose practical experience aligns with your Master Project goals.</p>
+                            <div class="link-footer">
+                                See Faculty: <a href="https://www.kcg.edu/en/faculty" target="_blank">KCGI Faculty List</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>KCGI Library Access</strong>
+                            <p>Access to IEEE, ACM Digital Library, and Springer academic databases for research papers.</p>
+                            <div class="link-footer">
+                                Scholarly Content: <a href="https://cir.nii.ac.jp/crid/en" target="_blank">CiNii Research (Japanese Journals)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Version Control</strong>
+                            <p>Institutional GitLab/GitHub links for collaborative project code and data management. (Check your student handbook for access).</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Academic Journals (NII)</strong>
+                            <p>Use the National Institute of Informatics (NII) resources for broad access to Japanese and international publications.</p>
+                            <div class="link-footer">
+                                Guidelines: <a href="https://www.nii.ac.jp/en/" target="_blank">NII (National Informatics Inst.)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 4. KYOTO LIFE PAGE - CULTURE & FOOD -->
+        <!-- ============================================== -->
+        <section id="kyoto" class="page-content">
+             <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>Kyoto Practical Guide: Culture & Essentials</h1>
+                    <p>Essential guides covering <span class="highlighted-text">cultural rules</span>, utilities, and daily life logistics for a smooth transition.</p>
+                </div>
+            </div>
+            <div class="detail-layout">
+                <div class="detail-section">
+                    <h2>Cultural Rules & Etiquette</h2>
+                    <p style="color: #fb8500; font-weight: 600;">Key practices to follow for respectful living in Japan.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Punctuality is Key</strong>
+                            <p>Being on time is the standard. For classes, meetings, and even social plans, aim to arrive 5-10 minutes early.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Greetings & Bowing</strong>
+                            <p>A simple nod or a slight bow (Eshaku) is common and shows respect in academic and professional settings.</p>
+                            <div class="link-footer">
+                                Learn Etiquette: <a href="https://www.japan-guide.com/e/e620.html" target="_blank">Japan Guide (Basic Etiquette)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Shoe Removal</strong>
+                            <p>Always remove shoes at the entrance (genkan) of homes, temples, and some traditional restaurants. Switch to the provided indoor slippers.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>"kokoka" Student Membership</strong>
+                            <p>Register at the "kokoka" Kyoto International Community House. They offer free legal/visa consultations and invitations to cultural events.</p>
+                             <div class="link-footer">
+                                Check events: <a href="https://www.kcif.or.jp/web/en/" target="_blank">kokoka Official Site</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h2>Food, Utilities & Budgeting</h2>
+                    <p style="color: #fb8500; font-weight: 600;">Managing housing essentials, waste, and culinary exploration.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>"Okoshiyasu Pass" (Student Perk)</strong>
+                            <p>Get the "Ryugakusei Okoshiyasu Pass"! It gives international students free entry to <span class="highlighted-text">Nijo Castle, Kyoto Tower, the Zoo</span>, and more.</p>
+                            <div class="link-footer">
+                                Learn more: <a href="https://www.kcif.or.jp/web/en/members/" target="_blank">Kyoto Int'l Foundation</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Waste Collection</strong>
+                            <p>Garbage separation is strict. You MUST follow your local ward's calendar for Burnable, Non-Burnable, and Recyclables days.</p>
+                             <div class="link-footer">
+                                Official waste rules: <a href="https://www.city.kyoto.lg.jp/en/" target="_blank">Kyoto City Guide</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Utilities Setup</strong>
+                            <p>Set up water, electricity, and gas contracts immediately. Bills can be paid easily at any convenience store (konbini).</p>
+                            <div class="link-footer">
+                                Electricity: <a href="https://www.kepco.co.jp/english/" target="_blank">KEPCO (Kansai Electric)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Local Supermarkets</strong>
+                            <p>For budgeting, shop at local supermarkets like Fresco, Gyomu Super (for bulk), or Izumiya. Look for discount stickers in the evening.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 5. NEW: EXPLORE KYOTO PAGE -->
+        <!-- ============================================== -->
+        <section id="explore" class="page-content">
+             <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>Explore Kyoto: A Visual Guide</h1>
+                    <p>Discover the ancient capital's most <span class="highlighted-text">iconic landmarks</span>, from sacred shrines to modern marvels.</p>
+                </div>
+            </div>
+
+            <!-- This is the new home for all highlight cards -->
+            <div class="detail-section highlight-section full-width" style="border-top-color: var(--color-accent); margin-top: 30px;">
+                
+                <!-- Famous Shrines -->
+                <h3 class="highlight-subtitle" id="explore-shrines">Must-See Shrines</h3>
+                <div class="highlight-grid">
+                    <!-- Card 1: Fushimi Inari -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=600&q=80" alt="Fushimi Inari Shrine" loading="lazy" onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Fushimi+Inari'">
+                        <div class="highlight-content">
+                            <strong>Fushimi Inari Shrine</strong>
+                            <p>Famous for its thousands of vibrant orange torii gates winding up a mountain path.</p>
+                            <a href="https://maps.app.goo.gl/r4m5nLg5P4w2xRjN8" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 2: Yasaka Shrine -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1554624328-18f3e5c76161?auto=format&fit=crop&w=600&q=80" alt="Yasaka Shrine at night" loading="lazy" onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Yasaka+Shrine'">
+                        <div class="highlight-content">
+                            <strong>Yasaka Shrine (Gion Shrine)</strong>
+                            <p>Located in the Gion District, this shrine is famous for the Gion Matsuri summer festival and its beautiful lanterns.</p>
+                            <a href="https://maps.app.goo.gl/b7J2N3G5Q89GgK3s7" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 3: Heian Jingu -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1533931671520-4139f600f7c2?auto=format&fit=crop&w=600&q=80" alt="Heian Jingu Shrine" loading="lazy" onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Heian+Jingu'">
+                        <div class="highlight-content">
+                            <strong>Heian Jingu Shrine</strong>
+                            <p>Known for its massive torii gate and beautiful, sprawling garden, representing the Heian period capital.</p>
+                            <a href="https://maps.app.goo.gl/uF5nVCmYc2rGvv1aA" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Iconic Temples & Castles -->
+                <h3 class="highlight-subtitle" id="explore-temples">Iconic Temples & Castles</h3>
+                <div class="highlight-grid">
+                    <!-- Card 4: Kinkaku-ji -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1545569424-5d6b883c52f8?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji Golden Pavilion" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kinkaku-ji'">
+                        <div class="highlight-content">
+                            <strong>Kinkaku-ji (Golden Pavilion)</strong>
+                            <p>A stunning Zen temple whose top two floors are completely covered in gold leaf, set over a large pond.</p>
+                            <a href="https://maps.app.goo.gl/g6vsgYqF1qS2vSjY8" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 5: Kiyomizu-dera -->
+                     <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?auto=format&fit=crop&w=600&q=80" alt="Kiyomizu-dera Temple stage" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kiyomizu-dera'">
+                        <div class="highlight-content">
+                            <strong>Kiyomizu-dera Temple</strong>
+                            <p>Famous for its massive wooden stage, built without nails, offering incredible views of the city and cherry blossoms.</p>
+                            <a href="https://maps.app.goo.gl/s9yRjAJcct82K5e46" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 6: Ginkaku-ji -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1590719247671-83f123b3e6c0?auto=format&fit=crop&w=600&q=80" alt="Ginkaku-ji Silver Pavilion" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Ginkaku-ji'">
+                        <div class="highlight-content">
+                            <strong>Ginkaku-ji (Silver Pavilion)</strong>
+                            <p>An elegant temple known for its meditative sand garden and moss-covered grounds along the Philosopher's Path.</p>
+                            <a href="https://maps.app.goo.gl/N5rGNA9jV3D8K5i3A" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1593105544719-610609335f66?auto=format&fit=crop&w=600&q=80" alt="Nijo Castle" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Nijo+Castle'">
+                        <div class="highlight-content">
+                            <strong>Nijō Castle</strong>
+                            <p>A UNESCO World Heritage site, famous for its ornate palaces, "nightingale floors," and beautiful gardens.</p>
+                            <a href="https://maps.app.goo.gl/S4M37rTPpEwz6qE18" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gardens & Nature -->
+                <h3 class="highlight-subtitle" id="explore-nature">Gardens & Nature</h3>
+                <div class="highlight-grid">
+                    <!-- Card 7: Arashiyama -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1578637387935-613106d8c03e?auto=format&fit=crop&w=600&q=80" alt="Arashiyama Bamboo Grove" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Arashiyama'">
+                        <div class="highlight-content">
+                            <strong>Arashiyama Bamboo Grove</strong>
+                            <p>Walk through the otherworldly, towering stalks of the Sagano Bamboo Forest, especially magic in the morning.</p>
+                            <a href="https://maps.app.goo.gl/rTDo1mK2AuzD1Efn9" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 8: Ryoan-ji -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1591143834909-f62514188daa?auto=format&fit=crop&w=600&q=80" alt="Ryoan-ji Zen Rock Garden" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Ryoan-ji'">
+                        <div class="highlight-content">
+                            <strong>Ryōan-ji Temple</strong>
+                            <p>Home to Japan's most famous rock garden, a masterpiece of Zen Buddhist simplicity and meditation.</p>
+                            <a href="https://maps.app.goo.gl/fC3k1H2x8S13SgQc6" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 9: Philosopher's Path -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1620021028787-8e6a57c24a6a?auto=format&fit=crop&w=600&q=80" alt="Philosopher's Path in spring" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Philosopher-s+Path'">
+                        <div class="highlight-content">
+                            <strong>Philosopher's Path</strong>
+                            <p>A beautiful stone path that follows a canal lined with hundreds of cherry trees, perfect for a peaceful walk.</p>
+                            <a href="https://maps.app.goo.gl/JqC6Rj7b2VPHVvTZA" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Culture & Cuisine -->
+                <h3 class="highlight-subtitle" id="explore-cuisine">Culture & Cuisine</h3>
+                <div class="highlight-grid">
+                    <!-- Card 10: Gion District -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1545890372-74c67b6b0b2e?auto=format&fit=crop&w=600&q=80" alt="Gion District at dusk" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Gion+District'">
+                        <div class="highlight-content">
+                            <strong>Gion District</strong>
+                            <p>Kyoto's famous geisha district. Explore traditional wooden machiya houses and perhaps spot a geiko or maiko.</p>
+                            <a href="httpss://maps.app.goo.gl/e27iM21JkMvRyHkP6" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 11: Nishiki Market -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1554593224-68161c892b1f?auto=format&fit=crop&w=600&q=80" alt="Nishiki Market food stalls" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Nishiki+Market'">
+                        <div class="highlight-content">
+                            <strong>Nishiki Market</strong>
+                            <p>"Kyoto's Kitchen." A lively market street with hundreds of stalls selling fresh seafood, produce, and local street food.</p>
+                            <a href="httpss://maps.app.goo.gl/f1mYgC1qfSA4G8sa7" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 12: Tea Ceremony -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1571168136622-4a0f443573c0?auto=format&fit=crop&w=600&q=80" alt="Japanese Tea Ceremony" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Tea+Ceremony'">
+                        <div class="highlight-content">
+                            <strong>Tea Ceremony (Sadō)</strong>
+                            <p>Participate in the "Way of Tea," a traditional cultural activity involving the ceremonial preparation and presentation of matcha.</p>
+                        </div>
+                    </div>
+                    <!-- Card 13: Kaiseki Ryori -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1550236510-9b6d85aee4a0?auto=format&fit=crop&w=600&q=80" alt="Kaiseki Ryori meal" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Kaiseki+Ryori'">
+                        <div class="highlight-content">
+                            <strong>Kaiseki Ryori</strong>
+                            <p>A traditional multi-course Japanese dinner, representing the pinnacle of refined local cuisine and beautiful presentation.</p>
+                        </div>
+                    </div>
+                     <!-- Card 14: Yudofu -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1623861214188-00c8dbb5168b?auto=format&fit=crop&w=600&q=80" alt="Yudofu (boiled tofu)" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Yudofu'">
+                        <div class="highlight-content">
+                            <strong>Yudofu (Tofu Cuisine)</strong>
+                            <p>Kyoto is famous for its clean water and soft tofu. Yudofu is simple, boiled tofu served with condiments, often near temples.</p>
+                        </div>
+                    </div>
+                     <!-- Card 15: Matcha Sweets -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1518047021644-01c3d181b37b?auto=format&fit=crop&w=600&q=80" alt="Matcha parfait and Yatsuhashi" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Matcha+Sweets'">
+                        <div class="highlight-content">
+                            <strong>Matcha Sweets & Yatsuhashi</strong>
+                            <p>Try everything from matcha parfaits to *Yatsuhashi* (a soft, cinnamon-flavored mochi triangle), Kyoto's most famous sweet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modern Kyoto -->
+                <h3 class="highlight-subtitle" id="explore-modern">Modern Kyoto</h3>
+                <div class="highlight-grid">
+                    <!-- Card 16: Kyoto Tower -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1548782358-03b6d8c83d6a?auto=format&fit=crop&w=600&q=80" alt="Kyoto Tower" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Tower'">
+                        <div class="highlight-content">
+                            <strong>Kyoto Tower</strong>
+                            <p>The city's tallest structure, offering a 360-degree panoramic view from its observation deck, located opposite Kyoto Station.</p>
+                            <a href="httpss://maps.app.goo.gl/i5Cg3bSPvM11TqjSA" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 17: Kyoto Station -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1533120932026-0d1cde0b8f15?auto=format&fit=crop&w=600&q=80" alt="Kyoto Station interior" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Station'">
+                        <div class="highlight-content">
+                            <strong>Kyoto Station Building</strong>
+                            <p>A futuristic marvel of glass and steel, featuring a "Skyway" tunnel, observation deck, and a grand staircase.</p>
+                            <a href="httpss://maps.app.goo.gl/tL9N73rK5yXwJd5w6" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                    <!-- Card 18: Sake Museum -->
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1589182801480-4f40c150a1af?auto=format&fit=crop&w=600&q=80" alt="Sake barrels" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Sake+Museum'">
+                        <div class="highlight-content">
+                            <strong>Gekkeikan Okura Sake Museum</strong>
+                            <p>Located in the Fushimi sake district, learn about the history and process of brewing sake, with tastings included.</p>
+                            <a href="httpss://maps.app.goo.gl/9tHk2e3o3GQLjK5j6" target="_blank" class="highlight-link">View on Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seasonal Events -->
+                <h3 class="highlight-subtitle" id="explore-events">Seasonal Events</h3>
+                <div class="highlight-grid">
+                    <div class="highlight-card">
+                        <img src="httpss://images.unsplash.com/photo-1523712130097-99118038f323?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms at night" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/e63946/ffffff?text=Sakura+Illuminations'">
+                        <div class="highlight-content">
+                            <strong>Sakura Illuminations (Late Mar - Apr)</strong>
+                            <p>Many temples and parks, like Maruyama Park, light up the cherry blossom trees for magical nighttime viewing (yozakura).</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1621213702196-1698FE0d3b3c?auto=format&fit=crop&w=600&q=80" alt="Aoi Matsuri parade" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/457b9d/ffffff?text=Aoi+Matsuri'">
+                        <div class="highlight-content">
+                            <strong>Aoi Matsuri (May 15)</strong>
+                            <p>One of Kyoto's three great festivals, featuring a large procession in elegant Heian period aristocratic clothing.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1533050183111-GD10015099fA?auto=format&fit=crop&w=600&q=80" alt="Gion Matsuri festival float" loading="lazy" onerror="this.src='httpsAccess-Control-Allow-Origin: *://placehold.co/600x200/fb8500/ffffff?text=Gion+Matsuri'">
+                        <div class="highlight-content">
+                            <strong>Gion Matsuri (July)</strong>
+                            <p>Japan's most famous festival. The highlight is the grand procession of massive, ornate yamaboko floats.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1597814410191-c0022d861d87?auto=format&fit=crop&w=600&q=80" alt="Daimonji fire festival" loading="lazy" onerror="this.src='https://placehold.co/600x200/e63946/ffffff?text=Gozan+Okuribi'">
+                        <div class="highlight-content">
+                            <strong>Gozan Okuribi (Aug 16)</strong>
+                            <p>Giant bonfires in the shape of kanji characters are lit on the mountains surrounding Kyoto to guide ancestral spirits.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1603522304041-863fd1a6f881?auto=format&fit=crop&w=600&q=80" alt="Jidai Matsuri parade participants" loading="lazy" onerror="this.src='https://placehold.co/600x200/7b0053/ffffff?text=Jidai+Matsuri'">
+                        <div class="highlight-content">
+                            <strong>Jidai Matsuri (Oct 22)</strong>
+                            <p>"Festival of the Ages." A grand parade showcasing costumes from every major period of Japanese history.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1607176662848-f68f8b8a4f91?auto=format&fit=crop&w=600&q=80" alt="Lanterns in Arashiyama" loading="lazy" onerror="this.src='https://placehold.co/600x200/0077b6/ffffff?text=Arashiyama+Hanatouro'">
+                        <div class="highlight-content">
+                            <strong>Arashiyama Hanatouro (December)</strong>
+                            <p>A winter illumination event where thousands of lanterns light up the Bamboo Grove and Togetsukyo Bridge.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kyoto by Season -->
+                <h3 class="highlight-subtitle" id="explore-seasons">Kyoto by Season</h3>
+                <div class="highlight-grid">
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1491263430332-9598d9c6e395?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms in Kyoto" loading="lazy" onerror="this.src='https://placehold.co/600x200/f7a6b4/000000?text=Spring'">
+                        <div class="highlight-content">
+                            <strong>Spring (Mar - May)</strong>
+                            <p>The city is covered in pink cherry blossoms (sakura). Key events include Aoi Matsuri and temple illuminations.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1565338125026-8c6f49cb8f9d?auto=format&fit=crop&w=600&q=80" alt="Summer greenery at a temple" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Summer'">
+                        <div class="highlight-content">
+                            <strong>Summer (Jun - Aug)</strong>
+                            <p>Hot and humid, but vibrant with festivals like Gion Matsuri and Gozan Okuribi. Enjoy *kawa-doko* (dining over the river).</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1508242337740-038e214f828a?auto=format&fit=crop&w=600&q=80" alt="Autumn leaves in Kyoto" loading="lazy" onerror="this.src='httpsAccess-Control-Allow-Origin: *://placehold.co/600x200/fb8500/ffffff?text=Autumn'">
+                        <div class="highlight-content">
+                            <strong>Autumn (Sep - Nov)</strong>
+                            <p>Spectacular autumn foliage (*momiji*). Temples are bathed in red and gold. See the Jidai Matsuri parade.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1550262413-d8b37c03d528?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji in snow" loading="lazy" onerror="this.src='https://placehold.co/600x200/a8dadc/000000?text=Winter'">
+                        <div class="highlight-content">
+                            <strong>Winter (Dec - Feb)</strong>
+                            <p>Cold and quiet, offering a peaceful atmosphere. See the Arashiyama Hanatouro and hope for a rare, beautiful snow day.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- 6. LOGISTICS GUIDE PAGE - SETTLEMENT & TRANSPORT -->
+        <!-- ============================================== -->
+        <section id="guide" class="page-content">
+            <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>Logistics & Mapping: Settling In</h1>
+                    <p>Official and practical steps for settling in, managing residency, and mastering local navigation.</p>
+                </div>
+            </div>
+            <div class="detail-layout">
+                 <div class="detail-section">
+                    <h2>Residency & Banking</h2>
+                    <p style="color: #7b0053; font-weight: 600;">Your first official steps in Japan.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Ward Office Registration (Critical)</strong>
+                            <p>You must register your address at your local Ward Office (Kuyakusho) <span class="highlighted-text">within 14 days</span> of moving in to get your Residence Card updated.</p>
+                            <div class="link-footer">
+                                Zairyu Card Info: <a href="https://www.isa.go.jp/en/applications/procedures/nyuukokukanri10_00003.html" target="_blank">Immigration Services Agency (ISA)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>National Health Insurance (NHI)</strong>
+                            <p>Enrollment in the National Health Insurance (Kokumin Kenkō Hoken) is <span class="highlighted-text">mandatory</span>. You will do this at the Ward Office at the same time.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Opening a Bank Account</strong>
+                            <p>You need your updated Residence Card and Student ID. <span class="highlighted-text">Japan Post Bank (Yūcho)</span> is often the easiest for new students. MEXT scholars must use it.</p>
+                            <div class="link-footer">
+                                Bank Info: <a href="https://www.jp-bank.japanpost.jp/en_index.html" target="_blank">Japan Post Bank</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Part-Time Work Limit</strong>
+                            <p>Your student visa allows part-time work (with permission) up to <span class="highlighted-text">28-hours per week</span>. This is a strict legal limit.</p>
+                            <div class="link-footer">
+                                Work Permit Rules: <a href="httpsAccess-Control-Allow-Origin: *://www.isa.go.jp/en/applications/guide/shikakugai.html" target="_blank">ISA (Permission)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h2>Transport & Mobile Phones</h2>
+                    <p style="color: #7b0053; font-weight: 600;">Getting connected and getting around Kyoto.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Student Commuter Pass (Teiki-ken)</strong>
+                            <p>Get a *Tsugaku Shomeisho* (commuter certificate) from a campus machine. Take it to a ticket office (e.g., at Kyoto Station) to buy a heavily discounted <span class="highlighted-text">commuter pass</span> for the shortest route between your home and campus.</p>
+                            <div class="link-footer">
+                                Kyoto Bus Routes: <a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/en/index.html" target="_blank">Kyoto City Bus Official Site</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>IC Card (ICOCA)</strong>
+                            <p>For all other travel, get an ICOCA card. It works seamlessly on all <span class="highlighted-text">buses, subways, and JR trains</span> in the region.</p>
+                            <div class="link-footer">
+                                ICOCA Card Info: <a href="https://www.jr-odekake.net/en/icoca/" target="_blank">JR West ICOCA</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Getting a Mobile Phone</strong>
+                            <p>SIM-free phones (from Apple, Bic Camera, etc.) plus a monthly plan from an MVNO (like IIJmio or Rakuten Mobile) is often cheapest. Major carriers (Docomo, AU) require longer contracts.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Bicycle Use & Registration</strong>
+                            <p>Bicycles are very common. You MUST register your bike (to prevent theft) and park only in designated areas. Riding on the left with traffic is the law.</p>
+                            <div class="link-footer">
+                                Cycling Rules: <a href="https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/traffic_safety/bicycle/index.html" target="_blank">National Police Agency (Rules)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Seasonal Weather Awareness</strong>
+                            <p>Be prepared for Kyoto's distinct seasons: <span class="highlighted-text">hot, humid summers</span> (June-Aug) and surprisingly cold winters (Dec-Feb). Typhoons can also occur in late summer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 7. SUPPORT PAGE - CONTACTS & HELP -->
+        <!-- ============================================== -->
+        <section id="support" class="page-content">
+             <div class="hero">
+                <!-- New 3D Canvas will be injected here by JS -->
+                <div class="hero-content">
+                    <h1>Student Support & Contact Information</h1>
+                    <p>Resources for administrative, technical, and personal assistance during your studies.</p>
+                </div>
+            </div>
+            <div class="detail-layout">
+                <div class="detail-section">
+                    <h2>Administrative & Student Services</h2>
+                    <p style="color: #e63946; font-weight: 600;">Contact points for registration, housing, and general inquiries.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Academic Coordinator System</strong>
+                            <p>Your primary contact for academic matters. Meet with your assigned advisor (coordinator) for course planning, "Bespoke" curriculum design, and Master Project guidance.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>International Admissions & Support</strong>
+                            <p>For visa support, orientation, and non-academic support. *Current* students should use the internal portal. *Prospective* students can use the email below.</p>
+                             <div class="link-footer">
+                                Email: <a href="mailto:admissions@kcg.edu">admissions@kcg.edu</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>IT Helpdesk & Campus Systems</strong>
+                            <p>For password resets, network issues, and campus software/VPN support. Contact is available via the internal KING LMS portal or at the on-campus IT office.</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Scholarships & Financial Aid</strong>
+                            <p>Check the JASSO website and the campus bulletin boards for scholarship opportunities available to international students.</p>
+                            <div class="link-footer">
+                                Scholarships: <a href="https://www.jasso.go.jp/en/study_j/scholarships/index.html" target="_blank">JASSO Scholarships</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <h2>Emergency & Health Services</h2>
+                    <p style="color: #e63946; font-weight: 600;">Immediate resources for health and safety.</p>
+                    <div class="bubble-flow">
+                        <div class="info-bubble">
+                            <strong>Emergency Contact (Japan)</strong>
+                            <p>Police (110) / Ambulance & Fire (119). Speak clearly. If you need an interpreter, ask for one.</p>
+                            <div class="link-footer">
+                                Emergency Guidance: <a href="https://www.japan.travel/en/practical/emergency/" target="_blank">Japan Travel (Emergency)</a>
+                            </div>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>Campus Counselor</strong>
+                            <p>Confidential support for mental health and stress management. Available by appointment during school hours (check portal for details).</p>
+                        </div>
+                        <div class="info-bubble">
+                            <strong>NHI Card (Health Insurance)</strong>
+                            <p>Always carry your <span class="highlighted-text">National Health Insurance (NHI) card</span>. It is required to visit any clinic or hospital and covers 70% of most costs.</p>
+                             <div class="link-footer">
+                                NHI Details: <a href="httpss://www.city.kyoto.lg.jp/en/page/0000109971.html" target="_blank">Kyoto City NHI Guide</a>
+                            </div>
+                        </div>
+                         <div class="info-bubble">
+                            <strong>Main Campus Location</strong>
+                            <p>KCGI (Hyakumanben Building): 7 Tanaka Monzencho, Sakyo-ku, Kyoto. Know your campus address.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div style="text-align:center;padding:20px;margin-top:40px;border-top:1px solid #e0e0e0;color:#6b7280; max-width: 1200px; margin: 0 auto;">
+            &copy; <span id="year"></span> KCG / KCGI Advanced 3D Portal.
+        </div>
+    </footer>
+
+    <script>
+        // --- Global Variables and Setup ---
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // --- SPA (Single Page App) Navigation Logic ---
+        const pageContents = document.querySelectorAll('.page-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        function showPage(pageId, event) {
+            // 1. Show/Hide Content with Transition
+            pageContents.forEach(section => {
+                if (section.id === pageId) {
+                    // Force reflow/restart animation
+                    section.classList.remove('active');
+                    void section.offsetWidth; 
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            // 2. Style Navigation Links
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // 3. Update URL hash
+            if (window.location.hash !== `#${pageId}`) {
+                history.pushState(null, null, `#${pageId}`);
+            }
+            
+            // 4. Handle scrolling
+            // Check if the event was triggered by a quick-link
+            const isQuickLink = event && event.target && (event.target.classList.contains('quick-link') || event.target.closest('.quick-link'));
+            
+            if (!isQuickLink) {
+                 // Only scroll to top if not triggered by a quick-link
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Handle initial load based on URL hash or default to home
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            let initialPage = 'home';
+            
+            if (hash) {
+                const pageExists = Array.from(pageContents).some(p => p.id === hash);
+                if (pageExists) {
+                    initialPage = hash;
+                } else {
+                    const anchorElement = document.getElementById(hash);
+                    if (anchorElement) {
+                        const parentPage = anchorElement.closest('.page-content');
+                        if (parentPage) {
+                            initialPage = parentPage.id;
+                            setTimeout(() => {
+                                anchorElement.scrollIntoView({ behavior: 'smooth' });
+                            }, 600); // Delay matches CSS transition
+                        }
+                    }
+                }
+            }
+            
+            showPage(initialPage, null);
+
+            // --- NEW: Initialize 3D Hero Graphics ---
+            initHeroGraphics();
+            
+            // --- Initialize 3D Cursor ---
+            initCursor();
+            
+            // --- Start main animation loop ---
+            animate();
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.substring(1) || 'home';
+            let pageId = 'home';
+
+            const pageExists = Array.from(pageContents).some(p => p.id === hash);
+            if (pageExists) {
+                pageId = hash;
+            } else {
+                const anchorElement = document.getElementById(hash);
+                if (anchorElement) {
+                    const parentPage = anchorElement.closest('.page-content');
+                    if (parentPage) {
+                        pageId = parentPage.id;
+                    }
+                }
+            }
+            showPage(pageId, null);
+        });
+
+
+        // --- THREE.JS 3D GRAPHICS LOGIC ---
+
+        // --- 1. 3D Cursor ---
+        let cursorScene, cursorCamera, cursorRenderer, cursorMesh, cursorLight, particleSystem;
+        const pointer = new THREE.Vector2();
+        const targetPosition = new THREE.Vector3();
+        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+        const raycaster = new THREE.Raycaster();
+
+        function initCursor() {
+            const canvas = document.getElementById('pointer-canvas');
+            cursorRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            cursorRenderer.setPixelRatio(window.devicePixelRatio);
+            cursorRenderer.setSize(window.innerWidth, window.innerHeight);
+
+            cursorScene = new THREE.Scene();
+            cursorCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+            cursorCamera.position.z = 2;
+
+            // The cursor mesh (a glowing icosahedron)
+            const geometry = new THREE.IcosahedronGeometry(0.05, 1);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x00b4d8,
+                emissive: 0x00b4d8,
+                emissiveIntensity: 2,
+                metalness: 0.5,
+                roughness: 0.3
+            });
+            cursorMesh = new THREE.Mesh(geometry, material);
+            cursorScene.add(cursorMesh);
+
+            // A light that follows the cursor
+            cursorLight = new THREE.PointLight(0x00b4d8, 5, 2);
+            cursorScene.add(cursorLight);
+
+            // Particle system
+            const particleCount = 200;
+            const particles = new THREE.BufferGeometry();
+            const pPositions = new Float32Array(particleCount * 3);
+            const pVelocities = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                pPositions[i * 3] = 0;
+                pPositions[i * 3 + 1] = 0;
+                pPositions[i * 3 + 2] = 0;
+                pVelocities.push({
+                    x: (Math.random() - 0.5) * 0.01,
+                    y: (Math.random() - 0.5) * 0.01,
+                    z: (Math.random() - 0.5) * 0.01,
+                    life: Math.random()
+                });
+            }
+            particles.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+            particles.userData.velocities = pVelocities; // Store velocities
+
+            const pMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.01,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                opacity: 0.7
+            });
+            
+            particleSystem = new THREE.Points(particles, pMaterial);
+            cursorScene.add(particleSystem);
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onCursorResize);
+        }
+
+        function onMouseMove(event) {
+            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(pointer, cursorCamera);
+            raycaster.ray.intersectPlane(plane, targetPosition);
+        }
+
+        function onCursorResize() {
+            cursorCamera.aspect = window.innerWidth / window.innerHeight;
+            cursorCamera.updateProjectionMatrix();
+            cursorRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animateCursor(clock) {
+            if (!cursorMesh) return;
+            
+            // Smoothly move cursor mesh
+            cursorMesh.position.lerp(targetPosition, 0.2);
+            cursorLight.position.copy(cursorMesh.position);
+
+            // Animate mesh rotation
+            const time = clock.getElapsedTime();
+            cursorMesh.rotation.x = time * 0.5;
+            cursorMesh.rotation.y = time * 0.3;
+
+            // Animate particles
+            const positions = particleSystem.geometry.attributes.position.array;
+            const velocities = particleSystem.geometry.userData.velocities;
+            
+            for (let i = 0; i < velocities.length; i++) {
+                velocities[i].life -= 0.01;
+
+                if (velocities[i].life <= 0) {
+                    // Reset particle
+                    positions[i * 3] = cursorMesh.position.x;
+                    positions[i * 3 + 1] = cursorMesh.position.y;
+                    positions[i * 3 + 2] = cursorMesh.position.z;
+                    velocities[i].x = (Math.random() - 0.5) * 0.01;
+                    velocities[i].y = (Math.random() - 0.5) * 0.01;
+                    velocities[i].z = (Math.random() - 0.5) * 0.01;
+                    velocities[i].life = Math.random();
+                }
+
+                // Update particle position
+                positions[i * 3] += velocities[i].x;
+                positions[i * 3 + 1] += velocities[i].y;
+                positions[i * 3 + 2] += velocities[i].z;
+            }
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+            
+            cursorRenderer.render(cursorScene, cursorCamera);
+        }
+
+        // --- 2. Hero 3D Graphics ---
+        const heroRenderers = [];
+        const heroMeshes = [];
+        const clock = new THREE.Clock();
+
+        const pageThemes = {
+            'home': { color: 0x0077b6, shape: 'Torus' },
+            'academics': { color: 0x1d3557, shape: 'Icosahedron' },
+            'research': { color: 0x2a9d8f, shape: 'TorusKnot' },
+            'kyoto': { color: 0xfb8500, shape: 'Torus' },
+            'explore': { color: 0x008080, shape: 'Icosahedron' },
+            'guide': { color: 0x7b0053, shape: 'TorusKnot' },
+            'support': { color: 0xe63946, shape: 'Icosahedron' }
+        };
+
+        function initHeroGraphics() {
+            document.querySelectorAll('.hero').forEach(heroEl => {
+                const pageId = heroEl.closest('.page-content').id;
+                const theme = pageThemes[pageId] || pageThemes['home'];
+                
+                const canvas = document.createElement('canvas');
+                canvas.className = 'hero-canvas';
+                heroEl.prepend(canvas); // Add canvas *inside* the hero
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, heroEl.clientWidth / heroEl.clientHeight, 0.1, 1000);
+                camera.position.z = 2.5;
+
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+                renderer.setSize(heroEl.clientWidth, heroEl.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                
+                // Add Lights
+                scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+                const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+                dirLight.position.set(5, 5, 5);
+                scene.add(dirLight);
+
+                // Create Shape
+                let geometry;
+                if (theme.shape === 'Torus') {
+                    geometry = new THREE.TorusGeometry(1, 0.3, 16, 100);
+                } else if (theme.shape === 'Icosahedron') {
+                    geometry = new THREE.IcosahedronGeometry(1.2, 0);
+                } else { // TorusKnot
+                    geometry = new THREE.TorusKnotGeometry(0.8, 0.3, 100, 16);
+                }
+                
+                const material = new THREE.MeshStandardMaterial({
+                    color: theme.color,
+                    metalness: 0.3,
+                    roughness: 0.4,
+                    wireframe: true
+                });
+
+                const mesh = new THREE.Mesh(geometry, material);
+                scene.add(mesh);
+                heroMeshes.push(mesh); // Store mesh for animation
+
+                // Store renderer and scene
+                heroRenderers.push({ renderer, scene, camera, el: heroEl });
+            });
+            
+            window.addEventListener('resize', onHeroResize);
+        }
+
+        function onHeroResize() {
+            heroRenderers.forEach(r => {
+                const width = r.el.clientWidth;
+                const height = r.el.clientHeight;
+                r.camera.aspect = width / height;
+                r.camera.updateProjectionMatrix();
+                r.renderer.setSize(width, height);
+            });
+        }
+        
+        function animateHeroGraphics() {
+            heroMeshes.forEach(mesh => {
+                mesh.rotation.x += 0.002;
+                mesh.rotation.y += 0.003;
+            });
+
+            heroRenderers.forEach(r => {
+                r.renderer.render(r.scene, r.camera);
+            });
+        }
+
+
+        // --- 3. Main Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Animate cursor
+            animateCursor(clock);
+
+            // Animate hero graphics
+            animateHeroGraphics();
+        }
+
+    </script>
+</body>
+</html>
