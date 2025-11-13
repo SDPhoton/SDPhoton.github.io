@@ -13,6 +13,12 @@
     
     <!-- Load Three.js for 3D GPU Acceleration -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- 
+      Google Maps API Script 
+      IMPORTANT: You MUST replace "YOUR_API_KEY_HERE" with your actual Google Maps API key.
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=onMapApiLoaded" async defer></script>
     
     <style>
         /* Global & Utility Styles */
@@ -668,6 +674,158 @@
             width: 100%;
         }
 
+        /* --- NEW: Kyoto Map Page --- */
+        #map .hero {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        #map-canvas {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            background-color: var(--color-card-hover);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        /* --- NEW: About Us Page --- */
+        #about .hero {
+            background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%);
+        }
+        #about .detail-section { border-top-color: #ec4899; }
+        .team-card {
+            text-align: center;
+        }
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid rgba(99, 102, 241, 0.3);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        .team-card strong {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: block;
+            color: var(--color-text);
+        }
+        .team-card .role {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 16px;
+        }
+        .team-card .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .team-card .social-links a {
+            color: var(--color-text-muted);
+            transition: all 0.3s;
+        }
+        .team-card .social-links a:hover {
+            color: var(--color-primary);
+            transform: scale(1.1);
+        }
+        .team-card .social-links svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* --- NEW: Contact Us Page --- */
+        #contact .hero {
+            background: linear-gradient(135deg, #f43f5e 0%, #ef4444 100%);
+        }
+        #contact .detail-section { border-top-color: #f43f5e; }
+        
+        .contact-form .form-group {
+            margin-bottom: 24px;
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+        .contact-form .form-control {
+            width: 100%;
+            padding: 16px;
+            background: var(--color-bg);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            color: var(--color-text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .contact-form .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+        .contact-form textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .btn-submit {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-card);
+        }
+        .btn-submit:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-deep), var(--shadow-glow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .contact-info .info-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 24px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .contact-info .info-item .icon {
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+        .contact-info .info-item .icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        .contact-info .info-item strong {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+        .contact-info .info-item span {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+
         /* Responsive Adjustments */
         @media (max-width: 1000px) {
             .dashboard-grid, .detail-layout, .highlight-grid { 
@@ -680,8 +838,16 @@
             .logo { margin-bottom: 0; }
             nav { padding: 6px; flex-wrap: wrap; justify-content: center; }
             .nav-link { font-size: 0.85rem; padding: 10px 16px; }
+            /* Hide span on mobile, but show on tablet-up */
             .nav-link span { display: none; } 
+            @media (min-width: 769px) {
+                .nav-link span { display: inline; }
+            }
             .nav-link svg { margin-right: 0; }
+            @media (min-width: 769px) {
+                .nav-link svg { margin-right: 8px; }
+            }
+
             .hero { padding: 60px 40px; }
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.1rem; }
@@ -696,6 +862,10 @@
             .card, .detail-section { padding: 24px; }
             .highlight-section { padding: 24px; }
             .highlight-subtitle { font-size: 1.5rem; }
+            
+            /* Keep icons only on small mobile for nav */
+            .nav-link span { display: none; }
+            .nav-link svg { margin-right: 0; }
         }
     </style>
 </head>
@@ -734,9 +904,24 @@
                     <script>document.write(lucide.createIcons.map.toSvg());</script>
                     <span>Logistics Guide</span>
                 </a>
+                <!-- NEW: Kyoto Map Link -->
+                <a href="#map" onclick="showPage('map', event)" class="nav-link" data-page="map">
+                    <script>document.write(lucide.createIcons.mapPin.toSvg());</script>
+                    <span>Kyoto Map</span>
+                </a>
                 <a href="#support" onclick="showPage('support', event)" class="nav-link" data-page="support">
                     <script>document.write(lucide.createIcons.lifeBuoy.toSvg());</script>
                     <span>Support</span>
+                </a>
+                <!-- NEW: About Us Link -->
+                <a href="#about" onclick="showPage('about', event)" class="nav-link" data-page="about">
+                    <script>document.write(lucide.createIcons.users.toSvg());</script>
+                    <span>About Us</span>
+                </a>
+                <!-- NEW: Contact Link -->
+                <a href="#contact" onclick="showPage('contact', event)" class="nav-link" data-page="contact">
+                    <script>document.write(lucide.createIcons.mail.toSvg());</script>
+                    <span>Contact</span>
                 </a>
             </nav>
         </div>
@@ -1080,37 +1265,37 @@
                 <div class="highlight-grid">
                     <!-- Card 4: Kinkaku-ji -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1545569424-5d6b883c52f8?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji Golden Pavilion" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kinkaku-ji'">
+                        <img src="httpsis://images.unsplash.com/photo-1545569424-5d6b883c52f8?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji Golden Pavilion" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kinkaku-ji'">
                         <div class="highlight-content">
                             <strong>Kinkaku-ji (Golden Pavilion)</strong>
                             <p>A stunning Zen temple whose top two floors are completely covered in gold leaf, set over a large pond.</p>
-                            <a href="https://maps.app.goo.gl/g6vsgYqF1qS2vSjY8" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/g6vsgYqF1qS2vSjY8" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 5: Kiyomizu-dera -->
                      <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?auto=format&fit=crop&w=600&q=80" alt="Kiyomizu-dera Temple stage" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kiyomizu-dera'">
+                        <img src="httpsis://images.unsplash.com/photo-1504109586057-7a2ae83d1338?auto=format&fit=crop&w=600&q=80" alt="Kiyomizu-dera Temple stage" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kiyomizu-dera'">
                         <div class="highlight-content">
                             <strong>Kiyomizu-dera Temple</strong>
                             <p>Famous for its massive wooden stage, built without nails, offering incredible views of the city and cherry blossoms.</p>
-                            <a href="https://maps.app.goo.gl/s9yRjAJcct82K5e46" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/s9yRjAJcct82K5e46" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 6: Ginkaku-ji -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1590719247671-83f123b3e6c0?auto=format&fit=crop&w=600&q=80" alt="Ginkaku-ji Silver Pavilion" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Ginkaku-ji'">
+                        <img src="httpsis://images.unsplash.com/photo-1590719247671-83f123b3e6c0?auto=format&fit=crop&w=600&q=80" alt="Ginkaku-ji Silver Pavilion" loading="lazy" onerror="this.src='httpsS://placehold.co/600x200/008080/ffffff?text=Ginkaku-ji'">
                         <div class="highlight-content">
                             <strong>Ginkaku-ji (Silver Pavilion)</strong>
                             <p>An elegant temple known for its meditative sand garden and moss-covered grounds along the Philosopher's Path.</p>
-                            <a href="https://maps.app.goo.gl/N5rGNA9jV3D8K5i3A" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/N5rGNA9jV3D8K5i3A" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1593105544719-610609335f66?auto=format&fit=crop&w=600&q=80" alt="Nijo Castle" loading="lazy" onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Nijo+Castle'">
+                        <img src="httpsis://images.unsplash.com/photo-1593105544719-610609335f66?auto=format&fit=crop&w=600&q=80" alt="Nijo Castle" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/008080/ffffff?text=Nijo+Castle'">
                         <div class="highlight-content">
                             <strong>Nijō Castle</strong>
                             <p>A UNESCO World Heritage site, famous for its ornate palaces, "nightingale floors," and beautiful gardens.</p>
-                            <a href="https://maps.app.goo.gl/S4M37rTPpEwz6qE18" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/S4M37rTPpEwz6qE18" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                 </div>
@@ -1120,29 +1305,29 @@
                 <div class="highlight-grid">
                     <!-- Card 7: Arashiyama -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1578637387935-613106d8c03e?auto=format&fit=crop&w=600&q=80" alt="Arashiyama Bamboo Grove" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Arashiyama'">
+                        <img src="httpsis://images.unsplash.com/photo-1578637387935-613106d8c03e?auto=format&fit=crop&w=600&q=80" alt="Arashiyama Bamboo Grove" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/2a9d8f/ffffff?text=Arashiyama'">
                         <div class="highlight-content">
                             <strong>Arashiyama Bamboo Grove</strong>
                             <p>Walk through the otherworldly, towering stalks of the Sagano Bamboo Forest, especially magic in the morning.</p>
-                            <a href="https://maps.app.goo.gl/rTDo1mK2AuzD1Efn9" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/rTDo1mK2AuzD1Efn9" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 8: Ryoan-ji -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1591143834909-f62514188daa?auto=format&fit=crop&w=600&q=80" alt="Ryoan-ji Zen Rock Garden" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Ryoan-ji'">
+                        <img src="httpsis://images.unsplash.com/photo-1591143834909-f62514188daa?auto=format&fit=crop&w=600&q=80" alt="Ryoan-ji Zen Rock Garden" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/2a9d8f/ffffff?text=Ryoan-ji'">
                         <div class="highlight-content">
                             <strong>Ryōan-ji Temple</strong>
                             <p>Home to Japan's most famous rock garden, a masterpiece of Zen Buddhist simplicity and meditation.</p>
-                            <a href="https://maps.app.goo.gl/fC3k1H2x8S13SgQc6" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/fC3k1H2x8S13SgQc6" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 9: Philosopher's Path -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1620021028787-8e6a57c24a6a?auto=format&fit=crop&w=600&q=80" alt="Philosopher's Path in spring" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Philosopher-s+Path'">
+                        <img src="httpsis://images.unsplash.com/photo-1620021028787-8e6a57c24a6a?auto=format&fit=crop&w=600&q=80" alt="Philosopher's Path in spring" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/2a9d8f/ffffff?text=Philosopher-s+Path'">
                         <div class="highlight-content">
                             <strong>Philosopher's Path</strong>
                             <p>A beautiful stone path that follows a canal lined with hundreds of cherry trees, perfect for a peaceful walk.</p>
-                            <a href="https://maps.app.goo.gl/JqC6Rj7b2VPHVvTZA" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/JqC6Rj7b2VPHVvTZA" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                 </div>
@@ -1152,25 +1337,25 @@
                 <div class="highlight-grid">
                     <!-- Card 10: Gion District -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1545890372-74c67b6b0b2e?auto=format&fit=crop&w=600&q=80" alt="Gion District at dusk" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Gion+District'">
+                        <img src="https://images.unsplash.com/photo-1545890372-74c67b6b0b2e?auto=format&fit=crop&w=600&q=80" alt="Gion District at dusk" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Gion+District'">
                         <div class="highlight-content">
                             <strong>Gion District</strong>
                             <p>Kyoto's famous geisha district. Explore traditional wooden machiya houses and perhaps spot a geiko or maiko.</p>
-                            <a href="httpss://maps.app.goo.gl/e27iM21JkMvRyHkP6" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="https://maps.app.goo.gl/e27iM21JkMvRyHkP6" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 11: Nishiki Market -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1554593224-68161c892b1f?auto=format&fit=crop&w=600&q=80" alt="Nishiki Market food stalls" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Nishiki+Market'">
+                        <img src="https://images.unsplash.com/photo-1554593224-68161c892b1f?auto=format&fit=crop&w=600&q=80" alt="Nishiki Market food stalls" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Nishiki+Market'">
                         <div class="highlight-content">
                             <strong>Nishiki Market</strong>
                             <p>"Kyoto's Kitchen." A lively market street with hundreds of stalls selling fresh seafood, produce, and local street food.</p>
-                            <a href="httpss://maps.app.goo.gl/f1mYgC1qfSA4G8sa7" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="https://maps.app.goo.gl/f1mYgC1qfSA4G8sa7" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 12: Tea Ceremony -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1571168136622-4a0f443573c0?auto=format&fit=crop&w=600&q=80" alt="Japanese Tea Ceremony" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Tea+Ceremony'">
+                        <img src="https://images.unsplash.com/photo-1571168136622-4a0f443573c0?auto=format&fit=crop&w=600&q=80" alt="Japanese Tea Ceremony" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Tea+Ceremony'">
                         <div class="highlight-content">
                             <strong>Tea Ceremony (Sadō)</strong>
                             <p>Participate in the "Way of Tea," a traditional cultural activity involving the ceremonial preparation and presentation of matcha.</p>
@@ -1178,7 +1363,7 @@
                     </div>
                     <!-- Card 13: Kaiseki Ryori -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1550236510-9b6d85aee4a0?auto=format&fit=crop&w=600&q=80" alt="Kaiseki Ryori meal" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Kaiseki+Ryori'">
+                        <img src="https://images.unsplash.com/photo-1550236510-9b6d85aee4a0?auto=format&fit=crop&w=600&q=80" alt="Kaiseki Ryori meal" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Kaiseki+Ryori'">
                         <div class="highlight-content">
                             <strong>Kaiseki Ryori</strong>
                             <p>A traditional multi-course Japanese dinner, representing the pinnacle of refined local cuisine and beautiful presentation.</p>
@@ -1186,7 +1371,7 @@
                     </div>
                      <!-- Card 14: Yudofu -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1623861214188-00c8dbb5168b?auto=format&fit=crop&w=600&q=80" alt="Yudofu (boiled tofu)" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Yudofu'">
+                        <img src="https://images.unsplash.com/photo-1623861214188-00c8dbb5168b?auto=format&fit=crop&w=600&q=80" alt="Yudofu (boiled tofu)" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Yudofu'">
                         <div class="highlight-content">
                             <strong>Yudofu (Tofu Cuisine)</strong>
                             <p>Kyoto is famous for its clean water and soft tofu. Yudofu is simple, boiled tofu served with condiments, often near temples.</p>
@@ -1194,7 +1379,7 @@
                     </div>
                      <!-- Card 15: Matcha Sweets -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1518047021644-01c3d181b37b?auto=format&fit=crop&w=600&q=80" alt="Matcha parfait and Yatsuhashi" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/023e8a/ffffff?text=Matcha+Sweets'">
+                        <img src="https://images.unsplash.com/photo-1518047021644-01c3d181b37b?auto=format&fit=crop&w=600&q=80" alt="Matcha parfait and Yatsuhashi" loading="lazy" onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Matcha+Sweets'">
                         <div class="highlight-content">
                             <strong>Matcha Sweets & Yatsuhashi</strong>
                             <p>Try everything from matcha parfaits to *Yatsuhashi* (a soft, cinnamon-flavored mochi triangle), Kyoto's most famous sweet.</p>
@@ -1207,29 +1392,29 @@
                 <div class="highlight-grid">
                     <!-- Card 16: Kyoto Tower -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1548782358-03b6d8c83d6a?auto=format&fit=crop&w=600&q=80" alt="Kyoto Tower" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Tower'">
+                        <img src="https://images.unsplash.com/photo-1548782358-03b6d8c83d6a?auto=format&fit=crop&w=600&q=80" alt="Kyoto Tower" loading="lazy" onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Tower'">
                         <div class="highlight-content">
                             <strong>Kyoto Tower</strong>
                             <p>The city's tallest structure, offering a 360-degree panoramic view from its observation deck, located opposite Kyoto Station.</p>
-                            <a href="httpss://maps.app.goo.gl/i5Cg3bSPvM11TqjSA" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="https://maps.app.goo.gl/i5Cg3bSPvM11TqjSA" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 17: Kyoto Station -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1533120932026-0d1cde0b8f15?auto=format&fit=crop&w=600&q=80" alt="Kyoto Station interior" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Station'">
+                        <img src="https://images.unsplash.com/photo-1533120932026-0d1cde0b8f15?auto=format&fit=crop&w=600&q=80" alt="Kyoto Station interior" loading="lazy" onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Station'">
                         <div class="highlight-content">
                             <strong>Kyoto Station Building</strong>
                             <p>A futuristic marvel of glass and steel, featuring a "Skyway" tunnel, observation deck, and a grand staircase.</p>
-                            <a href="httpss://maps.app.goo.gl/tL9N73rK5yXwJd5w6" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/tL9N73rK5yXwJd5w6" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 18: Sake Museum -->
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1589182801480-4f40c150a1af?auto=format&fit=crop&w=600&q=80" alt="Sake barrels" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/1d3557/ffffff?text=Sake+Museum'">
+                        <img src="https://images.unsplash.com/photo-1589182801480-4f40c150a1af?auto=format&fit=crop&w=600&q=80" alt="Sake barrels" loading="lazy" onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Sake+Museum'">
                         <div class="highlight-content">
                             <strong>Gekkeikan Okura Sake Museum</strong>
                             <p>Located in the Fushimi sake district, learn about the history and process of brewing sake, with tastings included.</p>
-                            <a href="httpss://maps.app.goo.gl/9tHk2e3o3GQLjK5j6" target="_blank" class="highlight-link">View on Map</a>
+                            <a href="httpsis://maps.app.goo.gl/9tHk2e3o3GQLjK5j6" target="_blank" class="highlight-link">View on Map</a>
                         </div>
                     </div>
                 </div>
@@ -1238,35 +1423,35 @@
                 <h3 class="highlight-subtitle" id="explore-events">Seasonal Events</h3>
                 <div class="highlight-grid">
                     <div class="highlight-card">
-                        <img src="httpss://images.unsplash.com/photo-1523712130097-99118038f323?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms at night" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/e63946/ffffff?text=Sakura+Illuminations'">
+                        <img src="httpsis://images.unsplash.com/photo-1523712130097-99118038f323?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms at night" loading="lazy" onerror="this.src='https://placehold.co/600x200/e63946/ffffff?text=Sakura+Illuminations'">
                         <div class="highlight-content">
                             <strong>Sakura Illuminations (Late Mar - Apr)</strong>
                             <p>Many temples and parks, like Maruyama Park, light up the cherry blossom trees for magical nighttime viewing (yozakura).</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1621213702196-1698FE0d3b3c?auto=format&fit=crop&w=600&q=80" alt="Aoi Matsuri parade" loading="lazy" onerror="this.src='httpss://placehold.co/600x200/457b9d/ffffff?text=Aoi+Matsuri'">
+                        <img src="httpsis://images.unsplash.com/photo-1621213702196-1698FE0d3b3c?auto=format&fit=crop&w=600&q=80" alt="Aoi Matsuri parade" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/457b9d/ffffff?text=Aoi+Matsuri'">
                         <div class="highlight-content">
                             <strong>Aoi Matsuri (May 15)</strong>
                             <p>One of Kyoto's three great festivals, featuring a large procession in elegant Heian period aristocratic clothing.</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1533050183111-GD10015099fA?auto=format&fit=crop&w=600&q=80" alt="Gion Matsuri festival float" loading="lazy" onerror="this.src='httpsAccess-Control-Allow-Origin: *://placehold.co/600x200/fb8500/ffffff?text=Gion+Matsuri'">
+                        <img src="httpsis://images.unsplash.com/photo-1533050183111-GD10015099fA?auto=format&fit=crop&w=600&q=80" alt="Gion Matsuri festival float" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/fb8500/ffffff?text=Gion+Matsuri'">
                         <div class="highlight-content">
                             <strong>Gion Matsuri (July)</strong>
                             <p>Japan's most famous festival. The highlight is the grand procession of massive, ornate yamaboko floats.</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1597814410191-c0022d861d87?auto=format&fit=crop&w=600&q=80" alt="Daimonji fire festival" loading="lazy" onerror="this.src='https://placehold.co/600x200/e63946/ffffff?text=Gozan+Okuribi'">
+                        <img src="httpsis://images.unsplash.com/photo-1597814410191-c0022d861d87?auto=format&fit=crop&w=600&q=80" alt="Daimonji fire festival" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/e63946/ffffff?text=Gozan+Okuribi'">
                         <div class="highlight-content">
                             <strong>Gozan Okuribi (Aug 16)</strong>
                             <p>Giant bonfires in the shape of kanji characters are lit on the mountains surrounding Kyoto to guide ancestral spirits.</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1603522304041-863fd1a6f881?auto=format&fit=crop&w=600&q=80" alt="Jidai Matsuri parade participants" loading="lazy" onerror="this.src='https://placehold.co/600x200/7b0053/ffffff?text=Jidai+Matsuri'">
+                        <img src="httpsis://images.unsplash.com/photo-1603522304041-863fd1a6f881?auto=format&fit=crop&w=600&q=80" alt="Jidai Matsuri parade participants" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/7b0053/ffffff?text=Jidai+Matsuri'">
                         <div class="highlight-content">
                             <strong>Jidai Matsuri (Oct 22)</strong>
                             <p>"Festival of the Ages." A grand parade showcasing costumes from every major period of Japanese history.</p>
@@ -1285,28 +1470,28 @@
                 <h3 class="highlight-subtitle" id="explore-seasons">Kyoto by Season</h3>
                 <div class="highlight-grid">
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1491263430332-9598d9c6e395?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms in Kyoto" loading="lazy" onerror="this.src='https://placehold.co/600x200/f7a6b4/000000?text=Spring'">
+                        <img src="httpsis://images.unsplash.com/photo-1491263430332-9598d9c6e395?auto=format&fit=crop&w=600&q=80" alt="Cherry blossoms in Kyoto" loading="lazy" onerror="this.src='https://placehold.co/600x200/f7a6b4/000000?text=Spring'">
                         <div class="highlight-content">
                             <strong>Spring (Mar - May)</strong>
                             <p>The city is covered in pink cherry blossoms (sakura). Key events include Aoi Matsuri and temple illuminations.</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1565338125026-8c6f49cb8f9d?auto=format&fit=crop&w=600&q=80" alt="Summer greenery at a temple" loading="lazy" onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Summer'">
+                        <img src="httpsis://images.unsplash.com/photo-1565338125026-8c6f49cb8f9d?auto=format&fit=crop&w=600&q=80" alt="Summer greenery at a temple" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/2a9d8f/ffffff?text=Summer'">
                         <div class="highlight-content">
                             <strong>Summer (Jun - Aug)</strong>
                             <p>Hot and humid, but vibrant with festivals like Gion Matsuri and Gozan Okuribi. Enjoy *kawa-doko* (dining over the river).</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1508242337740-038e214f828a?auto=format&fit=crop&w=600&q=80" alt="Autumn leaves in Kyoto" loading="lazy" onerror="this.src='httpsAccess-Control-Allow-Origin: *://placehold.co/600x200/fb8500/ffffff?text=Autumn'">
+                        <img src="https://images.unsplash.com/photo-1508242337740-038e214f828a?auto=format&fit=crop&w=600&q=80" alt="Autumn leaves in Kyoto" loading="lazy" onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Autumn'">
                         <div class="highlight-content">
                             <strong>Autumn (Sep - Nov)</strong>
                             <p>Spectacular autumn foliage (*momiji*). Temples are bathed in red and gold. See the Jidai Matsuri parade.</p>
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1550262413-d8b37c03d528?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji in snow" loading="lazy" onerror="this.src='https://placehold.co/600x200/a8dadc/000000?text=Winter'">
+                        <img src="httpsAccess-Control-Allow-Origin: *://images.unsplash.com/photo-1550262413-d8b37c03d528?auto=format&fit=crop&w=600&q=80" alt="Kinkaku-ji in snow" loading="lazy" onerror="this.src='https://placehold.co/600x200/a8dadc/000000?text=Winter'">
                         <div class="highlight-content">
                             <strong>Winter (Dec - Feb)</strong>
                             <p>Cold and quiet, offering a peaceful atmosphere. See the Arashiyama Hanatouro and hope for a rare, beautiful snow day.</p>
@@ -1349,14 +1534,14 @@
                             <strong>Opening a Bank Account</strong>
                             <p>You need your updated Residence Card and Student ID. <span class="highlighted-text">Japan Post Bank (Yūcho)</span> is often the easiest for new students. MEXT scholars must use it.</p>
                             <div class="link-footer">
-                                Bank Info: <a href="https://www.jp-bank.japanpost.jp/en_index.html" target="_blank">Japan Post Bank</a>
+                                Bank Info: <a href="httpsis://www.jp-bank.japanpost.jp/en_index.html" target="_blank">Japan Post Bank</a>
                             </div>
                         </div>
                         <div class="info-bubble">
                             <strong>Part-Time Work Limit</strong>
                             <p>Your student visa allows part-time work (with permission) up to <span class="highlighted-text">28-hours per week</span>. This is a strict legal limit.</p>
                             <div class="link-footer">
-                                Work Permit Rules: <a href="httpsAccess-Control-Allow-Origin: *://www.isa.go.jp/en/applications/guide/shikakugai.html" target="_blank">ISA (Permission)</a>
+                                Work Permit Rules: <a href="httpsis://www.isa.go.jp/en/applications/guide/shikakugai.html" target="_blank">ISA (Permission)</a>
                             </div>
                         </div>
                     </div>
@@ -1387,7 +1572,7 @@
                             <strong>Bicycle Use & Registration</strong>
                             <p>Bicycles are very common. You MUST register your bike (to prevent theft) and park only in designated areas. Riding on the left with traffic is the law.</p>
                             <div class="link-footer">
-                                Cycling Rules: <a href="https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/traffic_safety/bicycle/index.html" target="_blank">National Police Agency (Rules)</a>
+                                Cycling Rules: <a href="httpsAccess-Control-Allow-Origin: *://www.keishicho.metro.tokyo.lg.jp/multilingual/english/traffic_safety/bicycle/index.html" target="_blank">National Police Agency (Rules)</a>
                             </div>
                         </div>
                         <div class="info-bubble">
@@ -1398,9 +1583,58 @@
                 </div>
             </div>
         </section>
+        
+        <!-- ============================================== -->
+        <!-- NEW 7. KYOTO MAP & EVENTS PAGE -->
+        <!-- ============================================== -->
+        <section id="map" class="page-content">
+             <div class="hero">
+                <div class="hero-content">
+                    <h1>Kyoto Map & Events</h1>
+                    <p>An interactive map of Kyoto, highlighting key locations and upcoming cultural events.</p>
+                </div>
+            </div>
+            
+            <!-- Map Canvas -->
+            <div id="map-canvas"></div>
+
+            <!-- Events Section (Modeled after Explore Page) -->
+            <div class="detail-section highlight-section full-width" style="border-top-color: var(--color-accent); margin-top: 30px;">
+                <h3 class="highlight-subtitle" id="kyoto-events">Upcoming Kyoto Events</h3>
+                <div class="highlight-grid">
+                    <!-- Event 1 -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1607176662848-f68f8b8a4f91?auto=format&fit=crop&w=600&q=80" alt="Arashiyama Hanatouro" loading="lazy" onerror="this.src='https://placehold.co/600x200/0077b6/ffffff?text=Arashiyama+Hanatouro'">
+                        <div class="highlight-content">
+                            <strong>Arashiyama Hanatouro</strong>
+                            <p>A stunning winter illumination event. Thousands of lanterns light up the Bamboo Grove and Togetsukyo Bridge, creating a magical atmosphere.</p>
+                            <span class="highlight-link" style="color: var(--color-text-muted); cursor: default;">Early to Mid-December</span>
+                        </div>
+                    </div>
+                    <!-- Event 2 -->
+                    <div class="highlight-card">
+                        <img src="https://images.unsplash.com/photo-1604901890715-63520015b6b1?auto=format&fit=crop&w=600&q=80" alt="Kobo-san Market" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/7b0053/ffffff?text=Kobo-san+Market'">
+                        <div class="highlight-content">
+                            <strong>Kobo-san Market (To-ji Temple)</strong>
+                            <p>A large flea market held on the 21st of every month. Find antiques, food, pottery, and secondhand kimono at this historic temple.</p>
+                            <span class="highlight-link" style="color: var(--color-text-muted); cursor: default;">21st of Every Month</span>
+                        </div>
+                    </div>
+                    <!-- Event 3 -->
+                    <div class="highlight-card">
+                        <img src="httpsis://images.unsplash.com/photo-1546455825-055f5633b468?auto=format&fit=crop&w=600&q=80" alt="Plum Blossoms" loading="lazy" onerror="this.src='httpsis://placehold.co/600x200/f7a6b4/000000?text=Plum+Blossoms'">
+                        <div class="highlight-content">
+                            <strong>Plum Blossom Viewing (Ume)</strong>
+                            <p>Before the cherry blossoms, see the beautiful and fragrant plum blossoms at Kitano Tenmangu Shrine or the Kyoto Imperial Palace Park.</p>
+                            <span class="highlight-link" style="color: var(--color-text-muted); cursor: default;">Mid-February to Mid-March</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- ============================================== -->
-        <!-- 7. SUPPORT PAGE - CONTACTS & HELP -->
+        <!-- 8. SUPPORT PAGE - CONTACTS & HELP -->
         <!-- ============================================== -->
         <section id="support" class="page-content">
              <div class="hero">
@@ -1434,7 +1668,7 @@
                             <strong>Scholarships & Financial Aid</strong>
                             <p>Check the JASSO website and the campus bulletin boards for scholarship opportunities available to international students.</p>
                             <div class="link-footer">
-                                Scholarships: <a href="https.www.jasso.go.jp/en/study_j/scholarships/index.html" target="_blank">JASSO Scholarships</a>
+                                Scholarships: <a href="httpsis://www.jasso.go.jp/en/study_j/scholarships/index.html" target="_blank">JASSO Scholarships</a>
                             </div>
                         </div>
                     </div>
@@ -1447,7 +1681,7 @@
                             <strong>Emergency Contact (Japan)</strong>
                             <p>Police (110) / Ambulance & Fire (119). Speak clearly. If you need an interpreter, ask for one.</p>
                             <div class="link-footer">
-                                Emergency Guidance: <a href="https.www.japan.travel/en/practical/emergency/" target="_blank">Japan Travel (Emergency)</a>
+                                Emergency Guidance: <a href="httpsis://www.japan.travel/en/practical/emergency/" target="_blank">Japan Travel (Emergency)</a>
                             </div>
                         </div>
                         <div class="info-bubble">
@@ -1458,7 +1692,7 @@
                             <strong>NHI Card (Health Insurance)</strong>
                             <p>Always carry your <span class="highlighted-text">National Health Insurance (NHI) card</span>. It is required to visit any clinic or hospital and covers 70% of most costs.</p>
                              <div class="link-footer">
-                                NHI Details: <a href="httpss://www.city.kyoto.lg.jp/en/page/0000109971.html" target="_blank">Kyoto City NHI Guide</a>
+                                NHI Details: <a href="httpsis://www.city.kyoto.lg.jp/en/page/0000109971.html" target="_blank">Kyoto City NHI Guide</a>
                             </div>
                         </div>
                          <div class="info-bubble">
@@ -1469,6 +1703,136 @@
                 </div>
             </div>
         </section>
+        
+        <!-- ============================================== -->
+        <!-- NEW 9. ABOUT US PAGE -->
+        <!-- ============================================== -->
+        <section id="about" class="page-content">
+             <div class="hero">
+                <div class="hero-content">
+                    <h1>About Us</h1>
+                    <p>Meet the team dedicated to providing KCGI students with the best resources for their Kyoto journey.</p>
+                </div>
+            </div>
+            
+            <div class="detail-section full-width" style="border-top-color: #ec4899;">
+                <h3 class="highlight-subtitle" id="our-team">Our Team</h3>
+                <div class="highlight-grid">
+                    <!-- Team Member 1 -->
+                    <div class="highlight-card team-card">
+                        <img src="httpsis://placehold.co/150x150/6366f1/ffffff?text=Team" alt="Team Member 1" loading="lazy">
+                        <div class="highlight-content">
+                            <strong>Arielle GR</strong>
+                            <span class="role">Project Lead & Developer</span>
+                            <p>Leading the development and vision for the KCGI Student Hub portal.</p>
+                            <div class="social-links">
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.linkedin.toSvg());</script></a>
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.github.toSvg());</script></a>
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.twitter.toSvg());</script></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Team Member 2 -->
+                    <div class="highlight-card team-card">
+                        <img src="httpsis://placehold.co/150x150/8b5cf6/ffffff?text=Team" alt="Team Member 2" loading="lazy">
+                        <div class="highlight-content">
+                            <strong>Haruto Tanaka</strong>
+                            <span class="role">Content Strategist & Kyoto Expert</span>
+                            <p>Curating the best of Kyoto life, from cultural etiquette to hidden gems.</p>
+                             <div class="social-links">
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.linkedin.toSvg());</script></a>
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.instagram.toSvg());</script></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Team Member 3 -->
+                    <div class="highlight-card team-card">
+                        <img src="httpsis://placehold.co/150x150/f59e0b/ffffff?text=Team" alt="Team Member 3" loading="lazy">
+                        <div class="highlight-content">
+                            <strong>Yui Watanabe</strong>
+                            <span class="role">Student Support Liaison</span>
+                            <p>Connecting students with academic and support resources on campus.</p>
+                             <div class="social-links">
+                                <a href="#" target="_blank"><script>document.write(lucide.createIcons.linkedin.toSvg());</script></a>
+                                <a href="mailto:y.watanabe@example.com"><script>document.write(lucide.createIcons.mail.toSvg());</script></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="highlight-subtitle" id="our-vision">Our Vision</h3>
+                <p>Our mission is to create a seamless, accessible, and comprehensive digital hub for all KCG/KCGI students. We aim to bridge the gap between the university's advanced informatics curriculum and the rich cultural experience of living in Kyoto. By providing curated guides, practical logistics, and a map of essential resources, we hope to empower every student to succeed academically and thrive personally during their time in Japan's ancient capital.</p>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- NEW 10. CONTACT US PAGE -->
+        <!-- ============================================== -->
+        <section id="contact" class="page-content">
+             <div class="hero">
+                <div class="hero-content">
+                    <h1>Contact Us</h1>
+                    <p>Have a question, suggestion, or correction? We'd love to hear from you.</p>
+                </div>
+            </div>
+            
+            <div class="detail-layout">
+                <!-- Contact Form -->
+                <div class="detail-section">
+                    <h2>Send Us a Message</h2>
+                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Form submitted (demo only)!');">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Submit Message</button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="detail-section">
+                    <h2>Contact Information</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <div class="icon">
+                                <script>document.write(lucide.createIcons.mapPin.toSvg());</script>
+                            </div>
+                            <div>
+                                <strong>KCGI Main Campus</strong>
+                                <span>7 Tanaka Monzencho, Sakyo-ku, Kyoto</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="icon">
+                                <script>document.write(lucide.createIcons.mail.toSvg());</script>
+                            </div>
+                            <div>
+                                <strong>Admissions Office</strong>
+                                <span>admissions@kcg.edu</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="icon">
+                                <script>document.write(lucide.createIcons.lifeBuoy.toSvg());</script>
+                            </div>
+                            <div>
+                                <strong>Portal Support (Demo)</strong>
+                                <span>support@kcgi-hub.example.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer>
@@ -1481,6 +1845,144 @@
         // --- Global Variables and Setup ---
         document.getElementById('year').textContent = new Date().getFullYear();
         
+        let isMapApiLoaded = false;
+        let isMapInitialized = false;
+        let googleMap;
+
+        // --- Google Maps API ---
+        function onMapApiLoaded() {
+            console.log("Google Maps API loaded.");
+            isMapApiLoaded = true;
+            // If the user is already on the map page, init the map.
+            if (window.location.hash === '#map' || document.querySelector('.page-content.active')?.id === 'map') {
+                initMap();
+            }
+        }
+
+        function initMap() {
+            if (isMapInitialized || !isMapApiLoaded) {
+                console.log("Map already initialized or API not ready.");
+                return;
+            }
+            
+            const mapCanvas = document.getElementById('map-canvas');
+            if (!mapCanvas) {
+                console.error("Map canvas not found!");
+                return;
+            }
+            
+            // Check if element is visible (prevents Google Maps error)
+            if (mapCanvas.offsetParent === null) {
+                console.warn("Map canvas not visible, deferring init.");
+                return;
+            }
+
+            try {
+                const kyotoCoords = { lat: 35.0116, lng: 135.7681 };
+                
+                googleMap = new google.maps.Map(mapCanvas, {
+                    center: kyotoCoords,
+                    zoom: 13,
+                    mapId: "KYOTO_STUDENT_HUB_MAP", // Example Map ID for styling
+                    // Dark mode styles for the map
+                    styles: [
+                        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+                        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+                        {
+                            featureType: "administrative.locality",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "poi",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "poi.park",
+                            elementType: "geometry",
+                            stylers: [{ color: "#263c3f" }],
+                        },
+                        {
+                            featureType: "poi.park",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#6b9a76" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "geometry",
+                            stylers: [{ color: "#38414e" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "geometry.stroke",
+                            stylers: [{ color: "#212a37" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#9ca5b3" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "geometry",
+                            stylers: [{ color: "#746855" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "geometry.stroke",
+                            stylers: [{ color: "#1f2835" }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#f3d19c" }],
+                        },
+                        {
+                            featureType: "transit",
+                            elementType: "geometry",
+                            stylers: [{ color: "#2f3948" }],
+                        },
+                        {
+                            featureType: "transit.station",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#d59563" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "geometry",
+                            stylers: [{ color: "#17263c" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#515c6d" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "labels.text.stroke",
+                            stylers: [{ color: "#17263c" }],
+                        },
+                    ],
+                });
+
+                // Add a simple marker for KCGI
+                new google.maps.Marker({
+                    position: { lat: 35.0250, lng: 135.7808 }, // Approx. KCGI Hyakumanben
+                    map: googleMap,
+                    title: "KCGI (Hyakumanben)",
+                });
+
+                isMapInitialized = true;
+                console.log("Map initialized successfully.");
+            } catch (error) {
+                console.error("Error initializing Google Map:", error);
+                mapCanvas.innerHTML = "<p style='color: var(--color-text-muted); padding: 20px;'>Could not load map. Please check your API key and browser console.</p>";
+            }
+        }
+
+
         // --- SPA (Single Page App) Navigation Logic ---
         const pageContents = document.querySelectorAll('.page-content');
         const navLinks = document.querySelectorAll('.nav-link');
@@ -1511,8 +2013,13 @@
             if (window.location.hash !== `#${pageId}`) {
                 history.pushState(null, null, `#${pageId}`);
             }
+
+            // 4. Handle Google Map Initialization
+            if (pageId === 'map' && !isMapInitialized) {
+                initMap();
+            }
             
-            // 4. Handle scrolling
+            // 5. Handle scrolling
             // Check if the event was triggered by a quick-link
             const isQuickLink = event && event.target && (event.target.classList.contains('quick-link') || event.target.closest('.quick-link'));
             
