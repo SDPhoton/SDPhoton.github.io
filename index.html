@@ -660,6 +660,135 @@
             border: 1px solid rgba(99, 102, 241, 0.2);
             border-top: 4px solid;
         }
+         /* --- NEW: Academics Compact Grid Styles --- */
+        .concentration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .concentration-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concentration-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: var(--color-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .concentration-card h3 {
+            font-size: 1.3rem;
+            margin: 0 0 12px 0;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concentration-card h3 svg {
+            color: var(--color-accent);
+            width: 24px;
+            height: 24px;
+        }
+
+        .concentration-card p {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .supervisor-section {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 3px solid var(--color-secondary);
+            margin-top: auto;
+        }
+
+        .supervisor-section h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-secondary);
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+
+        .supervisor-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .supervisor-list li {
+            font-size: 0.9rem;
+            color: var(--color-text);
+            margin-bottom: 8px; /* Increased for button spacing */
+            display: flex;
+            flex-wrap: wrap; /* Allows wrap on small screens */
+            align-items: center;
+            justify-content: space-between; /* Space name and link */
+            gap: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 4px;
+        }
+
+        .supervisor-list li:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .supervisor-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .supervisor-name::before {
+            content: "•";
+            color: var(--color-accent);
+        }
+        
+        .profile-link {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--color-primary);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            white-space: nowrap;
+        }
+
+        .profile-link:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        /* Research Styling */
+        #research .hero {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        }
+
+        #research .detail-section {
+            border-top-color: #8b5cf6;
+        }
+
 
         .highlight-subtitle {
             font-size: 1.8rem;
@@ -693,7 +822,11 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            padding:20px;
+            position:relative;
+            
+            object-position: 80% 100%;
         }
 
         .highlight-card:hover {
@@ -703,11 +836,14 @@
         }
 
         .highlight-card img {
-            width: 100%;
+            width: 50%;
             height: 220px;
             object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             filter: brightness(0.85);
+            padding:20px;
+              position:relative;
+               transform: translate(100px, 20px);
         }
 
         .highlight-card:hover img {
@@ -804,8 +940,10 @@
             border: 4px solid rgba(99, 102, 241, 0.3);
             margin-bottom: 20px;
             object-fit: cover;
+            padding:10px;
+            position:right;
         }
-
+ht
         .team-card strong {
             font-size: 1.3rem;
             font-weight: 700;
@@ -1075,7 +1213,7 @@
     <!-- Header and Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo">KCG / KCGI Guide</div>
+            <div class="logo">KCG / KCGI Portal</div>
 
             <nav id="main-nav">
                 <a href="#home" onclick="showPage('home', event)" class="nav-link" data-page="home">
@@ -1200,7 +1338,7 @@
             </div>
         </section>
 
-        <!-- ============================================== -->
+             <!-- ============================================== -->
         <!-- 2. ACADEMICS PAGE - CONCENTRATIONS & RESOURCES -->
         <!-- ============================================== -->
         <section id="academics" class="page-content">
@@ -1208,174 +1346,227 @@
                 <!-- 3D Canvas was removed -->
                 <div class="hero-content">
                     <h1>Academics & Research</h1>
-                    <p>Explore the focused fields of study, research opportunities, and specific skills you will master
-                        during your program.</p>
-                </div>
-            </div>
-            <div class="detail-layout">
-                <div class="detail-section">
-                    <h2>Fields of Concentration</h2>
-                    <p style="color: var(--color-secondary); font-weight: 600;">KCGI offers 8 specialized fields of
-                        study, combining IT expertise with practical application.</p>
-                    <div class="bubble-flow">
-                        <div class="info-bubble">
-                            <strong>Artificial Intelligence (AI)</strong>
-                            <p>Develop expertise in AI theory, Python programming, machine learning, and applied AI
-                                software. Become a professional who can utilize and implement AI technology across
-                                diverse industries.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Data Science</strong>
-                            <p>Master data mining, statistical analysis, and database technologies to analyze business
-                                data and support corporate decision-making strategies.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Web Systems Development</strong>
-                            <p>Deep dive into modern web architecture, full-stack development, and secure application
-                                design.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Global Entrepreneurship</strong>
-                            <p>Learn to formulate business plans, manage tech startups, and lead global IT innovation
-                                projects.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Network Administration</strong>
-                            <p>Focus on next-generation network infrastructure, cloud computing, and cybersecurity.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>ERP (Enterprise Resource Planning)</strong>
-                            <p>KCGI is the only university in Japan with systematic SAP S/4HANA education. Prepare for
-                                SAP Certified Consultant examinations and optimize business processes.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>IT Manga and Anime</strong>
-                            <p>A unique concentration blending media technology with digital content creation and
-                                business management.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>IT Tourism</strong>
-                            <p>Apply IT solutions to the tourism and hospitality industry, leveraging Kyoto's unique
-                                position as a world-renowned cultural destination.</p>
-                            <div class="link-footer">
-                                See all concentrations: <a href="https://www.kcg.edu/en/curriculum/concentration"
-                                    target="_blank">KCGI Official Site</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="detail-section">
-                    <h2>Study & Collaboration Resources</h2>
-                    <p style="color: var(--color-secondary); font-weight: 600;">Tools and tips for maximizing your
-                        academic output.</p>
-                    <div class="bubble-flow">
-                        <div class="info-bubble">
-                            <strong>Master Project Focus</strong>
-                            <p>Your "Master Project" is a core part of the curriculum. Start discussions with your
-                                advisor early to define a practical, industry-relevant topic.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Bespoke Curriculum</strong>
-                            <p>KCGI allows a "Bespoke" (custom) curriculum. Meet with your academic coordinator to
-                                design a study model that fits your specific career goals.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>KING LMS Platform</strong>
-                            <p>The King LMS is your central hub. Check it daily for course materials, assignments, and
-                                official announcements.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Networking & Language</strong>
-                            <p>Actively seek networking opportunities. Commit to practicing Japanese daily to maximize
-                                your industry and cultural integration.</p>
-                            <div class="link-footer">
-                                Japanese Practice: <a href="https://www.nhk.or.jp/lesson/" target="_blank">NHK World -
-                                    Japanese Lessons</a>
-                            </div>
-                        </div>
-                    </div>
+                    <p>Comprehensive guide to KCGI's concentrations, faculty supervisors, and research ecosystems.</p>
                 </div>
             </div>
 
-            <!-- Research Content (Merged) -->
-            <div class="detail-layout" style="margin-top: 50px;">
-                <div class="detail-section">
-                    <h2>Research & Applied Project Centers</h2>
-                    <p style="color: var(--color-secondary); font-weight: 600;">Key institutions at KCG/KCGI for applied
-                        informatics.</p>
+            <div class="detail-section full-width">
+                <h2>Fields of Concentration & Supervisors</h2>
+                <p style="color: var(--color-secondary); font-weight: 600; margin-bottom: 30px;">
+                    Specialized research tracks blending advanced IT theory with practical industry application.
+                </p>
 
-                    <div class="bubble-flow" style="margin-top: 20px;">
-                        <div class="info-bubble">
+                <!-- NEW COMPACT GRID LAYOUT -->
+                <div class="concentration-grid">
+                    
+                    <!-- Concentration 1: AI -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.brain.toSvg());</script>
+                            Artificial Intelligence (AI)
+                        </h3>
+                        <p>Focuses on deep learning, cognitive informatics, and pattern recognition. Students build applied AI solutions for robotics, healthcare, and finance.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Shinji Tomita (Dean)</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Jian Cui</span>
+                                    <a href="https://researchmap.jp/read0129208?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 2: Data Science -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.database.toSvg());</script>
+                            Data Science
+                        </h3>
+                        <p>Mastering big data analytics, pattern mining, and statistical modeling. Research areas include healthcare informatics and decision-making systems.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Assoc. Prof. Dinh Duy Tai</span>
+                                    <a href="https://researchmap.jp/dinhduytai?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Seiichiro Aoki</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 3: Web Systems -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.globe.toSvg());</script>
+                            Web Systems Development
+                        </h3>
+                        <p>Full-stack development, cloud architecture, and secure web application design. Emphasis on scalable modern frameworks.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Assoc. Prof. Takao Nakaguchi</span>
+                                    <a href="https://researchmap.jp/takao-nakaguchi?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Ryo Kawai</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 4: Global Entrepreneurship -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.briefcase.toSvg());</script>
+                            Global Entrepreneurship
+                        </h3>
+                        <p>Strategies for launching IT startups, business modeling, and managing global tech innovation.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Gary Tsuchimochi</span>
+                                    <a href="https://researchmap.jp/g-tsuchimochi?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Assoc. Prof. Kengo Onishi</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 5: Network Administration -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.server.toSvg());</script>
+                            Network Administration
+                        </h3>
+                        <p>Advanced infrastructure management, cybersecurity protocols, and IoT network design.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Yoshitaka Kai</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Tsutomu Konishi</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 6: ERP -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.barChart2.toSvg());</script>
+                            ERP (Enterprise Resource Planning)
+                        </h3>
+                        <p>Specialized training in SAP S/4HANA systems, business process optimization, and supply chain management integration.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Shozo Naito</span>
+                                    <a href="https://researchmap.jp/read0167385?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Katsuji Ishihara</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 7: IT Manga & Anime -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.penTool.toSvg());</script>
+                            IT Manga & Anime
+                        </h3>
+                        <p>Digital production pipelines, intellectual property management, and global content business. Affiliated with GAINAX studio members.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Yasuhiro Takeda</span>
+                                    <a href="https://en.wikipedia.org/wiki/Yasuhiro_Takeda" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Koji Ueda</span>
+                                    <a href="https://researchmap.jp/read0047391?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Concentration 8: IT Tourism -->
+                    <div class="concentration-card">
+                        <h3>
+                            <script>document.write(lucide.createIcons.plane.toSvg());</script>
+                            IT Tourism
+                        </h3>
+                        <p>Leveraging ICT for destination management, digital marketing in hospitality, and smart tourism solutions in Kyoto.</p>
+                        <div class="supervisor-section">
+                            <h4>Program Supervisors</h4>
+                            <ul class="supervisor-list">
+                                <li>
+                                    <span class="supervisor-name">Prof. Hong Seung Ko</span>
+                                    <a href="https://researchmap.jp/ko_hongseung?lang=en" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                                <li>
+                                    <span class="supervisor-name">Prof. Izu Matsuo</span>
+                                    <a href="https://www.kcg.edu/en/faculty" target="_blank" class="profile-link">View Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Merged & Compact Research Resources -->
+            <div class="detail-section full-width" style="margin-top: 30px;">
+                <h2>Research Ecosystem & Toolkit</h2>
+                <div class="bubble-flow">
+                    <div class="info-bubble" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1; min-width: 250px;">
                             <strong>The Master Project</strong>
-                            <p>The capstone of your degree. This is a practical, student-led project to solve a
-                                real-world problem, guided by a faculty sponsor.</p>
-                            <div class="link-footer">
-                                Learn more: <a href="https://www.kcg.edu/en/curriculum/master-project"
-                                    target="_blank">Master Project Details</a>
-                            </div>
+                            <p>The capstone of the KCGI degree. A practical, student-led project solving real-world problems under faculty sponsorship.</p>
+                            
                         </div>
-                        <div class="info-bubble">
+                         <div style="flex: 1; min-width: 250px;">
                             <strong>Cyber Kyoto Laboratory (CKL)</strong>
-                            <p>A research institute focusing on cybersecurity, IoT, and regional information systems,
-                                often collaborating with local government and industry.</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>KCG Museum</strong>
-                            <p>Japan's first distributed computer museum. A unique resource for studying the history of
-                                informatics, with rare historical hardware.</p>
-                            <div class="link-footer">
-                                Visit: <a href="https://www.kcg.edu/" target="_blank">KCG Museum Info</a>
-                            </div>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Japan Society for Applied Information</strong>
-                            <p>KCGI hosts the office for this academic society, providing close access to symposiums and
-                                publications on applied IT.</p>
+                            <p>A hub for advanced research in cybersecurity, IoT, and regional information systems.</p>
                         </div>
                     </div>
-                </div>
-                <div class="detail-section">
-                    <h2>Research Tools & Links</h2>
-                    <p style="color: var(--color-secondary); font-weight: 600;">Essential links for thesis planning,
-                        academic journals, and technical documentation.</p>
-                    <div class="bubble-flow">
-                        <div class="info-bubble">
-                            <strong>Faculty Profiles</strong>
-                            <p>Explore faculty specializations to find an advisor whose practical experience aligns with
-                                your Master Project goals.</p>
-                            <div class="link-footer">
-                                See Faculty: <a href="https://www.kcg.edu/en/faculty" target="_blank">KCGI Faculty
-                                    List</a>
-                            </div>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>KCGI Library Access</strong>
-                            <p>Access to IEEE, ACM Digital Library, and Springer academic databases for research papers.
-                            </p>
-                            <div class="link-footer">
-                                Scholarly Content: <a href="https://cir.nii.ac.jp/crid/en" target="_blank">CiNii
-                                    Research (Japanese Journals)</a>
-                            </div>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Version Control</strong>
-                            <p>Institutional GitLab/GitHub links for collaborative project code and data management.
-                                (Check your student handbook for access).</p>
-                        </div>
-                        <div class="info-bubble">
-                            <strong>Academic Journals (NII)</strong>
-                            <p>Use the National Institute of Informatics (NII) resources for broad access to Japanese
-                                and international publications.</p>
-                            <div class="link-footer">
-                                Guidelines: <a href="https://www.nii.ac.jp/en/" target="_blank">NII (National
-                                    Informatics Inst.)</a>
-                            </div>
+                    
+                    <div class="info-bubble">
+                        <strong>Essential Research Links</strong>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
+                             <a href="https://www.kcg.edu/en/curriculum/master-project" target="_blank" style="color: var(--color-accent); font-weight: 600;">Master Project</a>
+                             <a href="https://www.kcg.edu/en/faculty" target="_blank" style="color: var(--color-accent); font-weight: 600;">Faculty Profiles</a>
+                             <a href="https://www.kcg.edu/" target="_blank" style="color: var(--color-accent); font-weight: 600;">KCG Museum</a>
+                            
+                             
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
         <!-- ============================================== -->
         <!-- 4. KYOTO LIFE PAGE - CULTURE & FOOD -->
         <!-- ============================================== -->
@@ -1497,33 +1688,33 @@
                         <div class="highlight-content">
                             <strong>Fushimi Inari Shrine</strong>
                             <p>Famous for its thousands of vibrant orange torii gates winding up a mountain path.</p>
-                            <a href="https://maps.app.goo.gl/r4m5nLg5P4w2xRjN8" target="_blank"
+                            <a href="https://maps.app.goo.gl/jqdXbEL72sRLCuDC6" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 2: Yasaka Shrine -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1554624328-18f3e5c76161?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://images.unsplash.com/photo-1713346642924-fdda99d45870?auto=format&fit=crop&w=600&q=80"
                             alt="Yasaka Shrine at night" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Yasaka+Shrine'">
                         <div class="highlight-content">
                             <strong>Yasaka Shrine (Gion Shrine)</strong>
                             <p>Located in the Gion District, this shrine is famous for the Gion Matsuri summer festival
                                 and its beautiful lanterns.</p>
-                            <a href="https://maps.app.goo.gl/b7J2N3G5Q89GgK3s7" target="_blank"
+                            <a href="https://maps.app.goo.gl/dYWPzb4br7jCEdZG9" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 3: Heian Jingu -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1533931671520-4139f600f7c2?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://images.unsplash.com/photo-1752089490998-fdfd31880647?auto=format&fit=crop&w=600&q=80"
                             alt="Heian Jingu Shrine" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Heian+Jingu'">
                         <div class="highlight-content">
                             <strong>Heian Jingu Shrine</strong>
                             <p>Known for its massive torii gate and beautiful, sprawling garden, representing the Heian
                                 period capital.</p>
-                            <a href="https://maps.app.goo.gl/uF5nVCmYc2rGvv1aA" target="_blank"
+                            <a href="https://maps.app.goo.gl/jYxuPhPpaoEfQTFJA" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1534,14 +1725,14 @@
                 <div class="highlight-grid">
                     <!-- Card 4: Kinkaku-ji -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://images.unsplash.com/photo-1698137363944-d34de2b00bce?auto=format&fit=crop&w=600&q=80"
                             alt="Kinkaku-ji Golden Pavilion" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/008080/ffffff?text=Kinkaku-ji'">
                         <div class="highlight-content">
                             <strong>Kinkaku-ji (Golden Pavilion)</strong>
                             <p>A stunning Zen temple whose top two floors are completely covered in gold leaf, set over
                                 a large pond.</p>
-                            <a href="https://maps.app.goo.gl/g6vsgYqF1qS2vSjY8" target="_blank"
+                            <a href="https://maps.app.goo.gl/uzTXRiDZ6UQ3ATRi8" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1567,7 +1758,7 @@
                             <strong>Ginkaku-ji (Silver Pavilion)</strong>
                             <p>An elegant temple known for its meditative sand garden and moss-covered grounds along the
                                 Philosopher's Path.</p>
-                            <a href="https://maps.app.goo.gl/N5rGNA9jV3D8K5i3A" target="_blank"
+                            <a href="https://maps.app.goo.gl/oDHEHYBLLv19vaLB6" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1579,7 +1770,7 @@
                             <strong>Nijō Castle</strong>
                             <p>A UNESCO World Heritage site, famous for its ornate palaces, "nightingale floors," and
                                 beautiful gardens.</p>
-                            <a href="https://maps.app.goo.gl/S4M37rTPpEwz6qE18" target="_blank"
+                            <a href="https://maps.app.goo.gl/vhFeTtny85AJwuhH9" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1590,14 +1781,14 @@
                 <div class="highlight-grid">
                     <!-- Card 7: Arashiyama -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1545569424-6f4c78d34c5c?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://plus.unsplash.com/premium_photo-1722897917294-2846d6d79def?auto=format&fit=crop&w=600&q=80"
                             alt="Arashiyama Bamboo Grove" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Arashiyama'">
                         <div class="highlight-content">
                             <strong>Arashiyama Bamboo Grove</strong>
                             <p>Walk through the otherworldly, towering stalks of the Sagano Bamboo Forest, especially
                                 magic in the morning.</p>
-                            <a href="https://maps.app.goo.gl/rTDo1mK2AuzD1Efn9" target="_blank"
+                            <a href="https://maps.app.goo.gl/uea6BU2meNKCqPN9A" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1610,7 +1801,7 @@
                             <strong>Ryōan-ji Temple</strong>
                             <p>Home to Japan's most famous rock garden, a masterpiece of Zen Buddhist simplicity and
                                 meditation.</p>
-                            <a href="https://maps.app.goo.gl/fC3k1H2x8S13SgQc6" target="_blank"
+                            <a href="https://maps.app.goo.gl/3WJ48csgQPtNxaDr8" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1623,7 +1814,7 @@
                             <strong>Philosopher's Path</strong>
                             <p>A beautiful stone path that follows a canal lined with hundreds of cherry trees, perfect
                                 for a peaceful walk.</p>
-                            <a href="https://maps.app.goo.gl/JqC6Rj7b2VPHVvTZA" target="_blank"
+                            <a href="https://maps.app.goo.gl/eKZ3m4tTouD54KCn6" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1641,26 +1832,26 @@
                             <strong>Gion District</strong>
                             <p>Kyoto's famous geisha district. Explore traditional wooden machiya houses and perhaps
                                 spot a geiko or maiko.</p>
-                            <a href="https://maps.app.goo.gl/e27iM21JkMvRyHkP6" target="_blank"
+                            <a href="https://maps.app.goo.gl/2jEsUMjZKc29zrk89" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 11: Nishiki Market -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1554593224-68161c892b1f?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://images.unsplash.com/photo-1537155535180-42986fc6da07?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Nishiki Market food stalls" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Nishiki+Market'">
                         <div class="highlight-content">
                             <strong>Nishiki Market</strong>
                             <p>"Kyoto's Kitchen." A lively market street with hundreds of stalls selling fresh seafood,
                                 produce, and local street food.</p>
-                            <a href="https://maps.app.goo.gl/f1mYgC1qfSA4G8sa7" target="_blank"
+                            <a href="https://maps.app.goo.gl/rZHea9NrwWKHS9ZG9" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 12: Tea Ceremony -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1571168136622-4a0f443573c0?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://mapleandmoon.com/cdn/shop/articles/Blog-tea_2048x.jpg?v=1571323420"
                             alt="Japanese Tea Ceremony" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Tea+Ceremony'">
                         <div class="highlight-content">
@@ -1671,7 +1862,7 @@
                     </div>
                     <!-- Card 13: Kaiseki Ryori -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1550236510-9b6d85aee4a0?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXYACtsmeTACjq1hXBzcWdunnA3R2MVU3bjw&s"
                             alt="Kaiseki Ryori meal" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Kaiseki+Ryori'">
                         <div class="highlight-content">
@@ -1682,7 +1873,7 @@
                     </div>
                     <!-- Card 14: Yudofu -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1623861214188-00c8dbb5168b?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr8w58giyUe7brJ3J3-7DuoVZZDeiCGE7etg&s"
                             alt="Yudofu (boiled tofu)" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Yudofu'">
                         <div class="highlight-content">
@@ -1693,7 +1884,7 @@
                     </div>
                     <!-- Card 15: Matcha Sweets -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1518047021644-01c3d181b37b?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgaN92af-s8pLqOhmmMHlyVRCC-sYvB0gExw&s"
                             alt="Matcha parfait and Yatsuhashi" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/023e8a/ffffff?text=Matcha+Sweets'">
                         <div class="highlight-content">
@@ -1709,40 +1900,40 @@
                 <div class="highlight-grid">
                     <!-- Card 16: Kyoto Tower -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1548782358-03b6d8c83d6a?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://panasonic.net/electricworks/lighting/en_id/case/kyototower/img/hero01.jpg"
                             alt="Kyoto Tower" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Tower'">
                         <div class="highlight-content">
                             <strong>Kyoto Tower</strong>
                             <p>The city's tallest structure, offering a 360-degree panoramic view from its observation
                                 deck, located opposite Kyoto Station.</p>
-                            <a href="https://maps.app.goo.gl/i5Cg3bSPvM11TqjSA" target="_blank"
+                            <a href="https://maps.app.goo.gl/f632wSwqoCyhhbde8" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 17: Kyoto Station -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1533120932026-0d1cde0b8f15?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8DCdNkoFLAODc-5RRZMXa3hGBOIJ9MLZEgw&s"
                             alt="Kyoto Station interior" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Kyoto+Station'">
                         <div class="highlight-content">
                             <strong>Kyoto Station Building</strong>
                             <p>A futuristic marvel of glass and steel, featuring a "Skyway" tunnel, observation deck,
                                 and a grand staircase.</p>
-                            <a href="https://maps.app.goo.gl/tL9N73rK5yXwJd5w6" target="_blank"
+                            <a href="https://maps.app.goo.gl/zx7rsSTa923egiLe6" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
                     <!-- Card 18: Sake Museum -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1589182801480-4f40c150a1af?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQDInWwIWJuVca-cuiECsL-XCKiz9sR7jvnA&s"
                             alt="Sake barrels" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/1d3557/ffffff?text=Sake+Museum'">
                         <div class="highlight-content">
                             <strong>Gekkeikan Okura Sake Museum</strong>
                             <p>Located in the Fushimi sake district, learn about the history and process of brewing
                                 sake, with tastings included.</p>
-                            <a href="https://maps.app.goo.gl/9tHk2e3o3GQLjK5j6" target="_blank"
+                            <a href="https://maps.app.goo.gl/FZWu5Xxqfo3qHuiA6" target="_blank"
                                 class="highlight-link">View on Map</a>
                         </div>
                     </div>
@@ -1752,7 +1943,7 @@
                 <h3 class="highlight-subtitle" id="explore-events">Seasonal Events</h3>
                 <div class="highlight-grid">
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1523712130097-99118038f323?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://cdn.prod.website-files.com/60c9b52c9501fe2034df81c0/67ce968e062834478b9751c2_8210-889-1376a80bdf7c5fcb405705b93034d6b5-2064x1376.webp"
                             alt="Cherry blossoms at night" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/e63946/ffffff?text=Sakura+Illuminations'">
                         <div class="highlight-content">
@@ -1762,7 +1953,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1621213702196-1698FE0d3b3c?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://www.advantour.com/img/japan/festivals/aoi-matsuri.jpg"
                             alt="Aoi Matsuri parade" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/457b9d/ffffff?text=Aoi+Matsuri'">
                         <div class="highlight-content">
@@ -1772,7 +1963,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1533050183111-GD10015099fA?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://dskyoto.s3.amazonaws.com/gallery/full/4214/5758/7757/08-20140717_GionMatsuri_Junko-813.jpg"
                             alt="Gion Matsuri festival float" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Gion+Matsuri'">
                         <div class="highlight-content">
@@ -1782,7 +1973,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1597814410191-c0022d861d87?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://cdn.gaijinpot.com/app/uploads/sites/4/2015/08/fire-festival.jpg"
                             alt="Daimonji fire festival" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/e63946/ffffff?text=Gozan+Okuribi'">
                         <div class="highlight-content">
@@ -1792,7 +1983,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1603522304041-863fd1a6f881?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://cdn.mainichi.jp/vol1/2024/10/23/20241023p2a00m0na013000p/8.jpg?1"
                             alt="Jidai Matsuri parade participants" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/7b0053/ffffff?text=Jidai+Matsuri'">
                         <div class="highlight-content">
@@ -1802,7 +1993,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1607176662848-f68f8b8a4f91?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://jw-webmagazine.com/wp-content/uploads/2017/11/3161294_m.jpg"
                             alt="Lanterns in Arashiyama" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/0077b6/ffffff?text=Arashiyama+Hanatouro'">
                         <div class="highlight-content">
@@ -1817,7 +2008,7 @@
                 <h3 class="highlight-subtitle" id="explore-seasons">Kyoto by Season</h3>
                 <div class="highlight-grid">
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1491263430332-9598d9c6e395?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/05/a0005628/img/en/a0005628_main.png?20250217145234&q=80"
                             alt="Cherry blossoms in Kyoto" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/f7a6b4/000000?text=Spring'">
                         <div class="highlight-content">
@@ -1827,7 +2018,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1565338125026-8c6f49cb8f9d?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://resources.matcha-jp.com/resize/480x2000/2019/04/05-74525.webp"
                             alt="Summer greenery at a temple" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/2a9d8f/ffffff?text=Summer'">
                         <div class="highlight-content">
@@ -1837,7 +2028,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1508242337740-038e214f828a?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/05/a0005485/img/en/a0005485_parts_6721d874cb58d.jpg?20251027090000&q=80&rw=620&rw=443"
                             alt="Autumn leaves in Kyoto" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/fb8500/ffffff?text=Autumn'">
                         <div class="highlight-content">
@@ -1847,7 +2038,7 @@
                         </div>
                     </div>
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1550262413-d8b37c03d528?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://www.touchscreentravels.com/apps/japans-best/33936/icon.jpg"
                             alt="Kinkaku-ji in snow" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/a8dadc/000000?text=Winter'">
                         <div class="highlight-content">
@@ -1927,7 +2118,7 @@
                     <div class="bubble-flow">
                         <div class="info-bubble">
                             <strong>Student Commuter Pass (Teiki-ken)</strong>
-                            <p>Get a *Tsugaku Shomeisho* (commuter certificate) from a campus machine. Take it to a
+                            <p>Get a Tsugaku Shomeisho (commuter certificate) from a campus machine. Take it to a
                                 ticket office (e.g., at Kyoto Station) to buy a heavily discounted <span
                                     class="highlighted-text">commuter pass</span> for the shortest route between your
                                 home and campus.</p>
@@ -1963,12 +2154,7 @@
                                     Bicycle Rules</a>
                             </div>
                         </div>
-                        <div class="info-bubble">
-                            <strong>Seasonal Weather Awareness</strong>
-                            <p>Be prepared for Kyoto's distinct seasons: <span class="highlighted-text">hot, humid
-                                    summers</span> (June-Aug) and surprisingly cold winters (Dec-Feb). Typhoons can also
-                                occur in late summer.</p>
-                        </div>
+                  
                     </div>
                 </div>
             </div>
@@ -2005,7 +2191,7 @@
                 <div class="highlight-grid">
                     <!-- Event 1 -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1607176662848-f68f8b8a4f91?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/c8/42/1e/caption.jpg?w=900&h=500&s=1"
                             alt="Arashiyama Hanatouro" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/0077b6/ffffff?text=Arashiyama+Hanatouro'">
                         <div class="highlight-content">
@@ -2018,7 +2204,7 @@
                     </div>
                     <!-- Event 2 -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1604901890715-63520015b6b1?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://i0.wp.com/mykyotomachiya.com/wp-content/uploads/2015/01/140721_Kyoto-9233.jpg?ssl=1"
                             alt="Kobo-san Market" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/7b0053/ffffff?text=Kobo-san+Market'">
                         <div class="highlight-content">
@@ -2031,7 +2217,7 @@
                     </div>
                     <!-- Event 3 -->
                     <div class="highlight-card">
-                        <img src="https://images.unsplash.com/photo-1546455825-055f5633b468?auto=format&fit=crop&w=600&q=80"
+                        <img src="https://blog.sakura.co/wp-content/uploads/2022/01/shutterstock_1279538845.png"
                             alt="Plum Blossoms" loading="lazy"
                             onerror="this.src='https://placehold.co/600x200/f7a6b4/000000?text=Plum+Blossoms'">
                         <div class="highlight-content">
@@ -2055,6 +2241,9 @@
         <!-- ============================================== -->
         <!-- NEW 9. ABOUT US PAGE -->
         <!-- ============================================== -->
+               <!-- ============================================== -->
+        <!-- NEW 9. ABOUT US PAGE -->
+        <!-- ============================================== -->
         <section id="about" class="page-content">
             <div class="hero">
                 <div class="hero-content">
@@ -2068,132 +2257,75 @@
                 <h3 class="highlight-subtitle" id="our-team">Our Team</h3>
                 <div class="highlight-grid">
                     <!-- Team Member 1 -->
-                    <div class="highlight-card team-card">
-                        <img src="./images/team/arielle.jpg" alt="Arielle GR" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/6366f1/ffffff?text=Arielle'">
+                        <div class="highlight-card team-card">
+                        <img src="./images/team/lucero.png" alt="Lucero, Leus Santos" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/f59e0b/ffffff?text=Lucero'">
                         <div class="highlight-content">
-                            <strong>Arielle GR</strong>
-                            <span class="role">Project Lead & Developer</span>
-                            <p>Leading the development and vision for the KCGI Student Hub portal.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.github.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.twitter.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>Lucero, Leus Santos</strong>
+                            <span class="role">Web Developer and QA</span>
+                            <span class="role">Group Leader</span>
+                            <p>Handles development tasks and ensures quality through rigorous testing.</p>
+                        </div>
+                    </div>
+                    <div class="highlight-card team-card">
+                        <img src="./dhakal.png" alt="Dhakal Sagar" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/6366f1/ffffff?text=Dhakal'">
+                        <div class="highlight-content">
+                            <strong>Dhakal Sagar</strong>
+                            <span class="role">Frontend Designer and Programmer</span>
+                            <p>Responsible for the visual interface and implementing core application logic.</p>
                         </div>
                     </div>
                     <!-- Team Member 2 -->
                     <div class="highlight-card team-card">
-                        <img src="./images/team/haruto.jpg" alt="Haruto Tanaka" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/8b5cf6/ffffff?text=Haruto'">
+                        <img src="./images/team/khanal.png" alt="Khanal Khina" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/8b5cf6/ffffff?text=Khanal'">
                         <div class="highlight-content">
-                            <strong>Haruto Tanaka</strong>
-                            <span class="role">Content Strategist & Kyoto Expert</span>
-                            <p>Curating the best of Kyoto life, from cultural etiquette to hidden gems.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.instagram.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>Khanal Khina</strong>
+                            <span class="role">Web Design</span>
+                            <p>Focuses on the aesthetic layout and user interface design elements.</p>
                         </div>
                     </div>
                     <!-- Team Member 3 -->
+                
+                    <!-- Team Member 4 -->
                     <div class="highlight-card team-card">
-                        <img src="./images/team/yui.jpg" alt="Yui Watanabe" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/f59e0b/ffffff?text=Yui'">
+                        <img src="./ayesha.jpeg" alt="D.Ayesha Maduwanthi" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/10b981/ffffff?text=Ayesha'">
                         <div class="highlight-content">
-                            <strong>Yui Watanabe</strong>
-                            <span class="role">Student Support Liaison</span>
-                            <p>Connecting students with academic and support resources on campus.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                                <a href="mailto:y.watanabe@example.com">
-                                    <script>document.write(lucide.createIcons.mail.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>D.Ayesha Maduwanthi</strong>
+                            <span class="role">Web Development</span>
+                            <p>Contributes to the technical implementation and coding of the website.</p>
                         </div>
                     </div>
-                    <!-- Team Member 4 (New) -->
+                    <!-- Team Member 5 -->
                     <div class="highlight-card team-card">
-                        <img src="./images/team/kenji.jpg" alt="Kenji Sato" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/10b981/ffffff?text=Kenji'">
+                        <img src="./hossain.jpeg" alt="Hossain Zumon" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/ec4899/ffffff?text=Hossain'">
                         <div class="highlight-content">
-                            <strong>Kenji Sato</strong>
-                            <span class="role">Technical Advisor</span>
-                            <p>Ensuring the platform remains secure, scalable, and cutting-edge.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.github.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>Hossain Zumon</strong>
+                            <span class="role">Web Designer</span>
+                            <p>Crafts the visual style and ensures a consistent design language.</p>
                         </div>
                     </div>
-                    <!-- Team Member 5 (New) -->
+                    <!-- Team Member 6 -->
                     <div class="highlight-card team-card">
-                        <img src="./images/team/mei.jpg" alt="Mei Chen" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/ec4899/ffffff?text=Mei'">
+                        <img src="./images/team/bhandari.png" alt="Bhandari Asna" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=Bhandari'">
                         <div class="highlight-content">
-                            <strong>Mei Chen</strong>
-                            <span class="role">UI/UX Designer</span>
-                            <p>Crafting intuitive and beautiful interfaces for the student experience.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.instagram.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>Bhandari Asna</strong>
+                            <span class="role">Research and Gather Information</span>
+                            <p>Gathers essential data and content to populate the platform efficiently.</p>
                         </div>
                     </div>
-                    <!-- Team Member 6 (New) -->
+                    <!-- Team Member 7 -->
                     <div class="highlight-card team-card">
-                        <img src="./images/team/david.jpg" alt="David Smith" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=David'">
+                        <img src="./images/team/pyakurel.png" alt="Pyakurel Ananta" loading="lazy"
+                            onerror="this.src='https://placehold.co/150x150/f97316/ffffff?text=Pyakurel'">
                         <div class="highlight-content">
-                            <strong>David Smith</strong>
-                            <span class="role">Research Coordinator</span>
-                            <p>Facilitating access to academic resources and research labs.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.linkedin.toSvg());</script>
-                                </a>
-                                <a href="mailto:d.smith@example.com">
-                                    <script>document.write(lucide.createIcons.mail.toSvg());</script>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team Member 7 (New) -->
-                    <div class="highlight-card team-card">
-                        <img src="./images/team/sakura.jpg" alt="Sakura Yamamoto" loading="lazy"
-                            onerror="this.src='https://placehold.co/150x150/f97316/ffffff?text=Sakura'">
-                        <div class="highlight-content">
-                            <strong>Sakura Yamamoto</strong>
-                            <span class="role">Community Manager</span>
-                            <p>Building connections between international and local students.</p>
-                            <div class="social-links">
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.twitter.toSvg());</script>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <script>document.write(lucide.createIcons.instagram.toSvg());</script>
-                                </a>
-                            </div>
+                            <strong>Pyakurel Ananta</strong>
+                            <span class="role">Research and Gather Information</span>
+                            <p>Conducts research to provide accurate and relevant information for the hub.</p>
                         </div>
                     </div>
                 </div>
@@ -2226,23 +2358,23 @@
                         inquiries.</p>
                     <div class="bubble-flow">
                         <div class="info-bubble">
-                            <strong>Academic Coordinator System</strong>
+                         <strong>Academic Coordinator System</strong>
                             <p>Your primary contact for academic matters. Meet with your assigned advisor (coordinator)
                                 for course planning, "Bespoke" curriculum design, and Master Project guidance.</p>
-                        </div>
+                            <div class="link-footer">
+                                Support Info: <a href="https://www.kcg.edu/en/school-info/support"
+                                    target="_blank">KCGI Support Page</a>
+                                    </div>
+                                    </div>
                         <div class="info-bubble">
                             <strong>International Admissions & Support</strong>
-                            <p>For visa support, orientation, and non-academic support. *Current* students should use
-                                the internal portal. *Prospective* students can use the email below.</p>
+                            <p>For visa support, orientation, and non-academic support. Current students should use
+                                the internal portal. Prospective students can use the email below.</p>
                             <div class="link-footer">
                                 Email: <a href="mailto:admissions@kcg.edu">admissions@kcg.edu</a>
                             </div>
                         </div>
-                        <div class="info-bubble">
-                            <strong>IT Helpdesk & Campus Systems</strong>
-                            <p>For password resets, network issues, and campus software/VPN support. Contact is
-                                available via the internal KING LMS portal or at the on-campus IT office.</p>
-                        </div>
+              
                         <div class="info-bubble">
                             <strong>Scholarships & Financial Aid</strong>
                             <p>Check the JASSO website and the campus bulletin boards for scholarship opportunities
@@ -2279,11 +2411,6 @@
                             </div>
                         </div>
                         <div class="info-bubble">
-                            <strong>Campus Counselor</strong>
-                            <p>Confidential support for mental health and stress management. Available by appointment
-                                during school hours (check portal for details).</p>
-                        </div>
-                        <div class="info-bubble">
                             <strong>NHI Card (Health Insurance)</strong>
                             <p>Always carry your <span class="highlighted-text">National Health Insurance (NHI)
                                     card</span>. It is required to visit any clinic or hospital and covers 70% of most
@@ -2293,11 +2420,7 @@
                                     target="_blank">Kyoto City NHI Guide</a>
                             </div>
                         </div>
-                        <div class="info-bubble">
-                            <strong>Main Campus Location</strong>
-                            <p>KCGI (Hyakumanben Building): 7 Tanaka Monzencho, Sakyo-ku, Kyoto. Know your campus
-                                address.</p>
-                        </div>
+
                     </div>
                 </div>
 
@@ -2349,7 +2472,7 @@
                             </div>
                             <div>
                                 <strong>Portal Support (Demo)</strong>
-                                <span>support@kcgi-hub.example.com</span>
+                                <span>support@kcgi-arielle-gr-12.com</span>
                             </div>
                         </div>
                     </div>
