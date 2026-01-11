@@ -99,14 +99,74 @@
             align-items: center;
         }
 
+        /* --- NEW LOGO STYLES --- */
         .logo {
-            font-size: 1.9rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .logo-icon-box {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo:hover .logo-icon-box {
+            transform: rotate(10deg) scale(1.05);
+            border-color: var(--color-accent);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* SVG Color Transition */
+        .logo-icon-box svg {
+            transition: stroke 0.3s ease;
+        }
+        .logo:hover .logo-icon-box svg {
+            stroke: var(--color-accent);
+        }
+
+        .logo-text-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-main-text {
+            font-size: 1.5rem;
             font-weight: 800;
+            line-height: 1;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
+        }
+
+        .logo-sub-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-top: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover .logo-sub-text {
+            color: var(--color-text);
         }
 
         nav {
@@ -1238,7 +1298,24 @@
     <!-- Header and Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo">KCG / KCGI Portal</div>
+            <!-- NEW LOGO STRUCTURE -->
+            <div class="logo" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); showPage('home', null);">
+                <div class="logo-icon-box">
+                    <!-- Icon: CPU / Chip for Informatics -->
+                    <script>
+                        if (typeof lucide !== 'undefined' && lucide.icons) {
+                            document.write(lucide.icons.Cpu.toSvg({ color: "#8b5cf6", size: 24, "stroke-width": 2.5 }));
+                        } else {
+                            // Fallback SVG if lucide object structure differs
+                            document.write('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>');
+                        }
+                    </script>
+                </div>
+                <div class="logo-text-col">
+                    <span class="logo-main-text">KCG / KCGI</span>
+                    <span class="logo-sub-text">Student Portal</span>
+                </div>
+            </div>
 
             <nav id="main-nav">
                 <a href="#home" onclick="showPage('home', event)" class="nav-link" data-page="home">
