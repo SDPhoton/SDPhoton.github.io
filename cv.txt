@@ -1,0 +1,36 @@
+# Sagar Dhakal
+
+Kyoto, Japan  
+Email: sagardhakal.singularity@gmail.com  
+GitHub: https://github.com/SDPhoton  
+LinkedIn: https://linkedin.com/in/sagar-dhakal-80012b282  
+
+## Profile
+AI master’s student focused on large language models, multimodal AI, and applied ML systems. Background in electronics engineering with experience in programming, networking, and system security.
+
+## Education
+**MSc Artificial Intelligence** – Kyoto (Ongoing)  
+**BE Electronics, Communication & Information Engineering** – Tribhuvan University, 2024
+
+## Skills
+Python, PyTorch, Transformers, CNNs, Git, Linux, APIs, MySQL, Networking fundamentals
+
+## Projects
+
+### Collision Detection System
+CNN-based accident detection pipeline using CCTV feeds  
+https://github.com/SDPhoton/Accident-Detection-Project
+
+### IoT Indoor Gardening System
+Sensor-based automation with Firebase + Blynk  
+https://github.com/SDPhoton/Indoor-Gardening-System-IoT
+
+### Artist Management DB
+Django + MySQL database backend system
+
+## Experience
+**Computer Instructor — Unique Training Center (2025–Present)**  
+Teaching programming, networking, and IT fundamentals.
+
+## Languages
+Nepali (Native), English (Working), Japanese (Basic)
