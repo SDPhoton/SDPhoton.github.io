@@ -1,36 +1,148 @@
-# Sagar Dhakal
+# SAGAR DHAKAL
 
 Kyoto, Japan  
-Email: sagardhakal.singularity@gmail.com  
++977 9761635837  
+sagardhakal.singularity@gmail.com  
 GitHub: https://github.com/SDPhoton  
 LinkedIn: https://linkedin.com/in/sagar-dhakal-80012b282  
 
-## Profile
-AI master’s student focused on large language models, multimodal AI, and applied ML systems. Background in electronics engineering with experience in programming, networking, and system security.
+---
 
-## Education
-**MSc Artificial Intelligence** – Kyoto (Ongoing)  
-**BE Electronics, Communication & Information Engineering** – Tribhuvan University, 2024
+## PROFESSIONAL SUMMARY
 
-## Skills
-Python, PyTorch, Transformers, CNNs, Git, Linux, APIs, MySQL, Networking fundamentals
+Master’s student in Artificial Intelligence with a background in Electronics, Communication, and Information Engineering. Focused on large language models, multimodal AI systems, and applied machine learning infrastructure. Interested in building scalable AI pipelines, retrieval-augmented systems, and research-driven engineering solutions. Strong technical base in programming, networking, and system security.
 
-## Projects
+---
 
-### Collision Detection System
-CNN-based accident detection pipeline using CCTV feeds  
-https://github.com/SDPhoton/Accident-Detection-Project
+## RESEARCH INTERESTS
 
-### IoT Indoor Gardening System
-Sensor-based automation with Firebase + Blynk  
-https://github.com/SDPhoton/Indoor-Gardening-System-IoT
+- Large Language Models and Retrieval-Augmented Generation  
+- Multimodal Machine Learning  
+- Efficient Training and Inference Systems  
+- AI System Evaluation and Reliability  
+- Applied Machine Learning for Real-World Deployment  
 
-### Artist Management DB
-Django + MySQL database backend system
+---
 
-## Experience
-**Computer Instructor — Unique Training Center (2025–Present)**  
-Teaching programming, networking, and IT fundamentals.
+## EDUCATION
 
-## Languages
-Nepali (Native), English (Working), Japanese (Basic)
+### Master’s in Artificial Intelligence(Ongoing)
+Kyoto, Japan  
+
+Relevant focus:
+- Natural Language Processing  
+- Deep Learning  
+- Language Modeling  
+- Machine Learning Systems  
+
+---
+
+### Bachelor in Electronics, Communication and Information Engineering
+Tribhuvan University – Western Region Campus, Pokhara  
+**Graduated: 2024 | First Division
+
+Key areas:
+- Signal Processing  
+- Computer Vision  
+- Embedded Systems  
+- Networking  
+- Programming  
+
+---
+
+### **+2 Science** – 2019  
+Shree Purnamrit Bhawani Secondary School  
+
+### SEE – 2017  
+
+---
+
+## TECHNICAL SKILLS
+
+### Programming
+- Python, C, C++, JavaScript  
+
+### Machine Learning & AI
+- PyTorch  
+- CNN models  
+- Transformers (conceptual + applied)  
+- Data preprocessing & model evaluation  
+- Experiment workflows  
+
+### Systems & Tools
+- Linux, Git, APIs  
+- MySQL  
+- Basic Docker  
+
+### Security & Networking
+- Web application testing  
+- API security testing  
+- Vulnerability analysis  
+- Networking fundamentals  
+
+### Other Technical Areas
+- IoT systems  
+- Firebase integration  
+- Microcontroller interfacing  
+- Backend logic design  
+
+
+## PROJECTS
+
+### CNN-based Vehicle Collision Detection and Emergency Response System
+Final Year Project
+- Designed CNN-based computer vision pipeline to detect road accidents from CCTV feeds  
+- Implemented monitoring logic and emergency notification workflow  
+- Focused on inference pipeline and system architecture  
+- Demonstrated AI application in public safety infrastructure  
+
+GitHub:  
+https://github.com/SDPhoton/Accident-Detection-Project  
+
+### Smart IoT Indoor Gardening System
+Minor Project
+
+- Built automated plant monitoring system using sensors and microcontroller  
+- Integrated Firebase database and Blynk dashboard for real-time control  
+- Implemented environmental monitoring and automation logic  
+- Demonstrated IoT + software integration workflow  
+GitHub:  
+https://github.com/SDPhoton/Indoor-Gardening-System-IoT  
+
+###Artist Details Management System
+    Database Project:
+- Developed backend system using Django and MySQL  
+- Designed database schema and query logic  
+- Implemented CRUD operations and structured data retrieval  
+
+
+## PROFESSIONAL EXPERIENCE
+Computer Instructor
+Unique Training Center  
+Jan 2025 – Sep 2025
+
+- Taught programming, networking, and IT fundamentals  
+- Designed practical lab exercises  
+- Supported hardware/software setup and troubleshooting  
+- Prepared structured teaching materials  
+
+## ACADEMIC STRENGTHS
+- Strong engineering fundamentals  
+- Analytical debugging ability  
+- Experience translating theory into working systems  
+- Fast learner of new technical stacks  
+- Comfortable across software, hardware, and ML domains 
+
+## AWARDS & ACHIEVEMENTS
+- Robotics Competition Participation Certificate – VECTOR (2020)  
+- 2nd Position – College Quiz Competition (2018)  
+- 3rd Position – District Level Quiz Competition (2017)  
+
+## LANGUAGES
+- Nepali(Native)
+- English(Business Level)  
+- Japanese(Basic)
+
+
+## REFERENCES
+Available upon request
