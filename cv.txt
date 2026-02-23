@@ -1,148 +1,122 @@
-# SAGAR DHAKAL
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sagar Dhakal | AI Engineer</title>
 
-Kyoto, Japan  
-+977 9761635837  
-sagardhakal.singularity@gmail.com  
-GitHub: https://github.com/SDPhoton  
-LinkedIn: https://linkedin.com/in/sagar-dhakal-80012b282  
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+    line-height: 1.6;
+    color: #222;
+}
+h1, h2 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.section { margin-top: 30px; }
+ul { padding-left: 20px; }
+.header {
+    margin-bottom: 20px;
+}
+.contact a { margin-right: 15px; }
+</style>
 
----
+</head>
+<body>
 
-## PROFESSIONAL SUMMARY
+<div class="header">
+<h1>Sagar Dhakal</h1>
+<p>AI Master’s Student | LLMs • Multimodal AI • ML Systems</p>
 
-Master’s student in Artificial Intelligence with a background in Electronics, Communication, and Information Engineering. Focused on large language models, multimodal AI systems, and applied machine learning infrastructure. Interested in building scalable AI pipelines, retrieval-augmented systems, and research-driven engineering solutions. Strong technical base in programming, networking, and system security.
+<div class="contact">
+<a href="mailto:sagardhakal.singularity@gmail.com">Email</a>
+<a href="https://github.com/SDPhoton">GitHub</a>
+<a href="https://linkedin.com/in/sagar-dhakal-80012b282">LinkedIn</a>
+</div>
+</div>
 
----
+<div class="section">
+<h2>Profile</h2>
+<p>
+Master’s student in Artificial Intelligence with a background in Electronics,
+Communication, and Information Engineering. Focused on large language models,
+multimodal AI, and applied machine learning systems. Interested in building
+scalable AI pipelines, retrieval-augmented systems, and research-driven
+engineering solutions.
+</p>
+</div>
 
-## RESEARCH INTERESTS
+<div class="section">
+<h2>Research Interests</h2>
+<ul>
+<li>Large Language Models & Retrieval-Augmented Generation</li>
+<li>Multimodal Machine Learning</li>
+<li>Efficient Training & Inference Systems</li>
+<li>AI Reliability & Evaluation</li>
+<li>Applied ML Infrastructure</li>
+</ul>
+</div>
 
-- Large Language Models and Retrieval-Augmented Generation  
-- Multimodal Machine Learning  
-- Efficient Training and Inference Systems  
-- AI System Evaluation and Reliability  
-- Applied Machine Learning for Real-World Deployment  
+<div class="section">
+<h2>Education</h2>
+<p><b>Master’s in Artificial Intelligence</b> — Kyoto (Ongoing)</p>
+<p><b>BE Electronics, Communication & Information Engineering</b><br>
+Tribhuvan University, 2024 — First Division</p>
+</div>
 
----
+<div class="section">
+<h2>Technical Skills</h2>
+<ul>
+<li><b>Programming:</b> Python, C, C++, JavaScript</li>
+<li><b>AI/ML:</b> PyTorch, CNNs, Transformers, model evaluation</li>
+<li><b>Systems:</b> Linux, Git, APIs, MySQL, basic Docker</li>
+<li><b>Security:</b> Web/API testing, networking fundamentals</li>
+</ul>
+</div>
 
-## EDUCATION
+<div class="section">
+<h2>Projects</h2>
 
-### Master’s in Artificial Intelligence(Ongoing)
-Kyoto, Japan  
+<p><b>CNN Vehicle Collision Detection System</b><br>
+AI-based monitoring pipeline for detecting accidents from CCTV feeds.<br>
+<a href="https://github.com/SDPhoton/Accident-Detection-Project">View Project</a>
+</p>
 
-Relevant focus:
-- Natural Language Processing  
-- Deep Learning  
-- Language Modeling  
-- Machine Learning Systems  
+<p><b>IoT Indoor Gardening System</b><br>
+Automated monitoring using sensors, Firebase, and dashboard control.<br>
+<a href="https://github.com/SDPhoton/Indoor-Gardening-System-IoT">View Project</a>
+</p>
 
----
+<p><b>Artist Database System</b><br>
+Django + MySQL backend information management system.</p>
 
-### Bachelor in Electronics, Communication and Information Engineering
-Tribhuvan University – Western Region Campus, Pokhara  
-**Graduated: 2024 | First Division
+</div>
 
-Key areas:
-- Signal Processing  
-- Computer Vision  
-- Embedded Systems  
-- Networking  
-- Programming  
+<div class="section">
+<h2>Experience</h2>
+<p><b>Computer Instructor</b> — Unique Training Center (2025–Present)</p>
+<ul>
+<li>Taught programming, networking, and IT fundamentals</li>
+<li>Designed practical lab exercises</li>
+<li>Provided system troubleshooting support</li>
+</ul>
+</div>
 
----
+<div class="section">
+<h2>Languages</h2>
+<ul>
+<li>Nepali — Native</li>
+<li>English — Working proficiency</li>
+<li>Japanese — Basic</li>
+</ul>
+</div>
 
-### **+2 Science** – 2019  
-Shree Purnamrit Bhawani Secondary School  
-
-### SEE – 2017  
-
----
-
-## TECHNICAL SKILLS
-
-### Programming
-- Python, C, C++, JavaScript  
-
-### Machine Learning & AI
-- PyTorch  
-- CNN models  
-- Transformers (conceptual + applied)  
-- Data preprocessing & model evaluation  
-- Experiment workflows  
-
-### Systems & Tools
-- Linux, Git, APIs  
-- MySQL  
-- Basic Docker  
-
-### Security & Networking
-- Web application testing  
-- API security testing  
-- Vulnerability analysis  
-- Networking fundamentals  
-
-### Other Technical Areas
-- IoT systems  
-- Firebase integration  
-- Microcontroller interfacing  
-- Backend logic design  
-
-
-## PROJECTS
-
-### CNN-based Vehicle Collision Detection and Emergency Response System
-Final Year Project
-- Designed CNN-based computer vision pipeline to detect road accidents from CCTV feeds  
-- Implemented monitoring logic and emergency notification workflow  
-- Focused on inference pipeline and system architecture  
-- Demonstrated AI application in public safety infrastructure  
-
-GitHub:  
-https://github.com/SDPhoton/Accident-Detection-Project  
-
-### Smart IoT Indoor Gardening System
-Minor Project
-
-- Built automated plant monitoring system using sensors and microcontroller  
-- Integrated Firebase database and Blynk dashboard for real-time control  
-- Implemented environmental monitoring and automation logic  
-- Demonstrated IoT + software integration workflow  
-GitHub:  
-https://github.com/SDPhoton/Indoor-Gardening-System-IoT  
-
-###Artist Details Management System
-    Database Project:
-- Developed backend system using Django and MySQL  
-- Designed database schema and query logic  
-- Implemented CRUD operations and structured data retrieval  
-
-
-## PROFESSIONAL EXPERIENCE
-Computer Instructor
-Unique Training Center  
-Jan 2025 – Sep 2025
-
-- Taught programming, networking, and IT fundamentals  
-- Designed practical lab exercises  
-- Supported hardware/software setup and troubleshooting  
-- Prepared structured teaching materials  
-
-## ACADEMIC STRENGTHS
-- Strong engineering fundamentals  
-- Analytical debugging ability  
-- Experience translating theory into working systems  
-- Fast learner of new technical stacks  
-- Comfortable across software, hardware, and ML domains 
-
-## AWARDS & ACHIEVEMENTS
-- Robotics Competition Participation Certificate – VECTOR (2020)  
-- 2nd Position – College Quiz Competition (2018)  
-- 3rd Position – District Level Quiz Competition (2017)  
-
-## LANGUAGES
-- Nepali(Native)
-- English(Business Level)  
-- Japanese(Basic)
-
-
-## REFERENCES
-Available upon request
+</body>
+</html>
