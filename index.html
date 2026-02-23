@@ -3,189 +3,559 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sagar Dhakal | AI Engineer</title>
-
+<title>Sagar Dhakal — CV</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
-:root{
-  --accent:#2563eb;
-  --text:#222;
-  --muted:#666;
-  --bg:#ffffff;
-  --card:#f8fafc;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
-}
+  :root {
+    --ink: #111;
+    --soft: #888;
+    --rule: #e2e2e2;
+    --accent: #c0392b;
+    --bg: #faf9f7;
+    --card-bg: #f3f1ee;
+    --white: #fff;
+  }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:40px 20px;
-}
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    font-size: 15px;
+    min-height: 100vh;
+  }
 
-h1{margin-bottom:5px;}
-h2{
-  margin-top:40px;
-  border-bottom:2px solid #eee;
-  padding-bottom:6px;
-}
+  /* === NOISE TEXTURE OVERLAY === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
 
-.subtitle{
-  color:var(--muted);
-  margin-bottom:20px;
-}
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    animation: fadeUp 0.7s ease both;
+  }
 
-.links a{
-  margin-right:15px;
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:500;
-}
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-.links a:hover{ text-decoration:underline; }
+  /* ===== HEADER ===== */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 148px;
+    gap: 40px;
+    align-items: start;
+    padding-bottom: 36px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 40px;
+  }
 
-.card{
-  background:var(--card);
-  padding:18px;
-  border-radius:10px;
-  margin-top:15px;
-}
+  .header-text {}
 
-ul{padding-left:20px;}
+  .name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
 
-.tag{
-  display:inline-block;
-  background:#eef2ff;
-  color:#1e3a8a;
-  padding:4px 8px;
-  border-radius:6px;
-  margin:3px;
-  font-size:14px;
-}
+  .name em {
+    font-style: italic;
+    color: var(--accent);
+  }
 
-.footer{
-  margin-top:50px;
-  font-size:14px;
-  color:var(--muted);
-}
+  .role {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 20px;
+  }
 
-@media(max-width:700px){
-  .container{padding:25px 15px;}
-}
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .contact-row a {
+    color: var(--ink);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s;
+  }
+  .contact-row a:hover { color: var(--accent); }
+
+  .contact-row .dot {
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* === PROFILE PICTURE === */
+  .avatar-wrap {
+    position: relative;
+  }
+
+  .avatar {
+    width: 148px;
+    height: 148px;
+    border-radius: 4px;
+    background: var(--card-bg);
+    border: 2px solid var(--rule);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--soft);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* shown when src loads */
+  }
+
+  .avatar-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px dashed var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar-icon svg { opacity: 0.4; }
+
+  /* ===== BODY GRID ===== */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 48px;
+  }
+
+  /* ===== SECTION ===== */
+  .section { margin-bottom: 36px; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ===== SIDEBAR ITEMS ===== */
+  .side-item {
+    margin-bottom: 20px;
+  }
+
+  .side-item h4 {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .side-item p, .side-item li {
+    font-size: 13px;
+    color: var(--soft);
+    line-height: 1.6;
+  }
+
+  .side-item ul { list-style: none; }
+
+  /* ===== TAGS ===== */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+  .tag {
+    font-size: 11.5px;
+    font-family: 'DM Mono', monospace;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: 3px 8px;
+    border-radius: 3px;
+    color: var(--ink);
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .tag:hover { background: var(--ink); color: var(--white); border-color: var(--ink); cursor: default; }
+
+  /* ===== LANG BAR ===== */
+  .lang-item { margin-bottom: 12px; }
+  .lang-name { font-size: 13px; display: flex; justify-content: space-between; }
+  .lang-level { font-size: 11px; color: var(--soft); font-family: 'DM Mono', monospace; }
+  .lang-bar { height: 3px; background: var(--rule); border-radius: 2px; margin-top: 5px; }
+  .lang-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+
+  /* ===== ENTRIES (main col) ===== */
+  .entry {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 28px;
+    border-left: 2px solid var(--rule);
+    transition: border-color 0.25s;
+  }
+
+  .entry:hover { border-color: var(--accent); }
+
+  .entry-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+  .entry-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .entry-meta {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--soft);
+    white-space: nowrap;
+  }
+
+  .entry-sub {
+    font-size: 13px;
+    color: var(--soft);
+    margin-top: 2px;
+    margin-bottom: 8px;
+  }
+
+  .entry ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .entry ul li {
+    font-size: 13.5px;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 4px;
+    color: #444;
+  }
+
+  .entry ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 11px;
+    top: 3px;
+  }
+
+  .entry-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    text-decoration: none;
+    margin-top: 8px;
+    transition: gap 0.2s;
+  }
+
+  .entry-link:hover { gap: 9px; }
+
+  /* ===== PROFILE PARAGRAPH ===== */
+  .profile-text {
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: #444;
+    max-width: 580px;
+    margin-bottom: 0;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--soft);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 680px) {
+    .page { padding: 32px 20px 60px; }
+    .header { grid-template-columns: 1fr; }
+    .avatar { width: 100px; height: 100px; }
+    .body-grid { grid-template-columns: 1fr; }
+    .header-text { order: 2; }
+    .avatar-wrap { order: 1; }
+  }
 </style>
 </head>
-
 <body>
-<div class="container">
+<div class="page">
 
-<h1>Sagar Dhakal</h1>
-<div class="subtitle">
-AI Master’s Student • LLMs • Multimodal AI • ML Systems
-</div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-text">
+      <div class="role">AI Engineer &amp; Researcher</div>
+      <h1 class="name">Sagar<br><em>Dhakal</em></h1>
+      <div class="contact-row">
+        <a href="mailto:sagardhakal.singularity@gmail.com"><span class="dot">·</span> sagardhakal.singularity@gmail.com</a>
+        <a href="https://github.com/SDPhoton" target="_blank"><span class="dot">·</span> github/SDPhoton</a>
+        <a href="https://x.com/PhotonSagar" target="_blank"><span class="dot">·</span> x/PhotonSagar</a>
+        <a href="https://linkedin.com/in/sagar-dhakal-80012b282" target="_blank"><span class="dot">·</span> linkedin</a>
+      </div>
+    </div>
 
-<div class="links">
-<a href="mailto:sagardhakal.singularity@gmail.com">Email</a>
-<a href="https://github.com/SDPhoton">GitHub</a>
-<a href="https://linkedin.com/in/sagar-dhakal-80012b282">LinkedIn</a>
-</div>
+    <!-- PROFILE PICTURE — replace profile.png path or swap src -->
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatarBox">
+        <!-- To use your photo: replace 'profile.png' with your image filename -->
+        <img src="profile.png" alt="Sagar Dhakal"
+             onload="this.style.display='block'; document.getElementById('avatarPlaceholder').style.display='none';"
+             onerror="this.style.display='none';">
+        <div class="avatar-placeholder" id="avatarPlaceholder">
+          <div class="avatar-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <span>profile.png</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<h2>Profile</h2>
-<p>
-Master’s student in Artificial Intelligence with a background in Electronics,
-Communication, and Information Engineering. Focused on large language models,
-multimodal systems, and applied machine learning infrastructure.
-Interested in building scalable AI pipelines, retrieval-augmented systems,
-and research-driven engineering solutions.
-</p>
+  <!-- BODY -->
+  <div class="body-grid">
 
-<h2>Research Interests</h2>
-<div class="card">
-<span class="tag">LLMs</span>
-<span class="tag">RAG Systems</span>
-<span class="tag">Multimodal AI</span>
-<span class="tag">Efficient Inference</span>
-<span class="tag">AI Evaluation</span>
-<span class="tag">ML Infrastructure</span>
-</div>
+    <!-- LEFT SIDEBAR -->
+    <aside>
 
-<h2>Education</h2>
-<div class="card">
-<b>Master’s in Artificial Intelligence</b><br>
-Kyoto, Japan (Ongoing)
-</div>
+      <div class="section">
+        <div class="section-label">Skills</div>
 
-<div class="card">
-<b>BE Electronics, Communication & Information Engineering</b><br>
-Tribhuvan University — Western Region Campus, Pokhara<br>
-Graduated 2024 — First Division
-</div>
+        <div class="side-item">
+          <h4>Languages</h4>
+          <div class="tags">
+            <span class="tag">Python</span>
+            <span class="tag">C</span>
+            <span class="tag">C++</span>
+            <span class="tag">JavaScript</span>
+          </div>
+        </div>
 
-<h2>Technical Skills</h2>
-<div class="card">
-<b>Programming:</b> Python, C, C++, JavaScript<br>
-<b>AI/ML:</b> PyTorch, CNNs, Transformers, data preprocessing, evaluation<br>
-<b>Systems:</b> Linux, Git, APIs, MySQL, basic Docker<br>
-<b>Security:</b> Web/API testing, networking fundamentals<br>
-<b>Embedded/IoT:</b> Sensors, microcontrollers, Firebase integration
-</div>
+        <div class="side-item">
+          <h4>AI / ML</h4>
+          <div class="tags">
+            <span class="tag">PyTorch</span>
+            <span class="tag">Transformers</span>
+            <span class="tag">CNNs</span>
+            <span class="tag">RAG</span>
+            <span class="tag">LLMs</span>
+            <span class="tag">Multimodal AI</span>
+            <span class="tag">Evaluation</span>
+          </div>
+        </div>
 
-<h2>Projects</h2>
+        <div class="side-item">
+          <h4>Systems</h4>
+          <div class="tags">
+            <span class="tag">Linux</span>
+            <span class="tag">Git</span>
+            <span class="tag">Docker</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">APIs</span>
+            <span class="tag">Django</span>
+          </div>
+        </div>
 
-<div class="card">
-<b>CNN Vehicle Collision Detection System</b>
-<ul>
-<li>CNN pipeline for accident detection from CCTV feeds</li>
-<li>Real-time monitoring logic and alert workflow</li>
-<li>Focused on inference architecture and system integration</li>
-</ul>
-<a href="https://github.com/SDPhoton/Accident-Detection-Project">View on GitHub</a>
-</div>
+        <div class="side-item">
+          <h4>Embedded / IoT</h4>
+          <div class="tags">
+            <span class="tag">Sensors</span>
+            <span class="tag">Microcontrollers</span>
+            <span class="tag">Firebase</span>
+          </div>
+        </div>
+      </div>
 
-<div class="card">
-<b>IoT Indoor Gardening System</b>
-<ul>
-<li>Sensor-based automation system</li>
-<li>Firebase backend with monitoring dashboard</li>
-<li>Environmental control logic implementation</li>
-</ul>
-<a href="https://github.com/SDPhoton/Indoor-Gardening-System-IoT">View on GitHub</a>
-</div>
+      <div class="section">
+        <div class="section-label">Research Focus</div>
+        <div class="tags">
+          <span class="tag">LLMs</span>
+          <span class="tag">RAG Systems</span>
+          <span class="tag">Efficient Inference</span>
+          <span class="tag">ML Infrastructure</span>
+          <span class="tag">AI Evaluation</span>
+        </div>
+      </div>
 
-<div class="card">
-<b>Artist Management Database System</b>
-<ul>
-<li>Django + MySQL backend</li>
-<li>Schema design and CRUD logic</li>
-<li>Structured information retrieval</li>
-</ul>
-</div>
+      <div class="section">
+        <div class="section-label">Languages</div>
 
-<h2>Experience</h2>
-<div class="card">
-<b>Computer Instructor — Unique Training Center</b><br>
-Jan 2025 – Present
-<ul>
-<li>Taught programming, networking, and IT fundamentals</li>
-<li>Designed lab exercises and student projects</li>
-<li>Provided hardware/software troubleshooting support</li>
-</ul>
-</div>
+        <div class="lang-item">
+          <div class="lang-name"><span>Nepali</span><span class="lang-level">Native</span></div>
+          <div class="lang-bar"><div class="lang-fill" style="width:100%"></div></div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name"><span>English</span><span class="lang-level">Working</span></div>
+          <div class="lang-bar"><div class="lang-fill" style="width:75%"></div></div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name"><span>Japanese</span><span class="lang-level">Basic</span></div>
+          <div class="lang-bar"><div class="lang-fill" style="width:25%"></div></div>
+        </div>
+      </div>
 
-<h2>Languages</h2>
-<div class="card">
-Nepali — Native<br>
-English — Working proficiency<br>
-Japanese — Basic
-</div>
+    </aside>
 
-<div class="footer">
-© 2026 Sagar Dhakal
-</div>
+    <!-- MAIN COLUMN -->
+    <main>
+
+      <div class="section">
+        <div class="section-label">Profile</div>
+        <p class="profile-text">
+          Master's student in Artificial Intelligence with a background in Electronics, Communication, and Information Engineering. Focused on large language models, multimodal systems, and applied machine learning infrastructure. Interested in building scalable AI pipelines, retrieval-augmented systems, and research-driven engineering solutions.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Education</div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">Master's in Artificial Intelligence</span>
+            <span class="entry-meta">Ongoing</span>
+          </div>
+          <div class="entry-sub">Kyoto, Japan</div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">BE Electronics, Communication &amp; Information Engineering</span>
+            <span class="entry-meta">2024</span>
+          </div>
+          <div class="entry-sub">Tribhuvan University — Western Region Campus, Pokhara</div>
+          <ul>
+            <li>First Division</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Experience</div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">Computer Instructor</span>
+            <span class="entry-meta">Jan 2025 – Present</span>
+          </div>
+          <div class="entry-sub">Unique Training Center</div>
+          <ul>
+            <li>Taught programming, networking, and IT fundamentals</li>
+            <li>Designed lab exercises and student projects</li>
+            <li>Provided hardware/software troubleshooting support</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Projects</div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">CNN Vehicle Collision Detection System</span>
+          </div>
+          <ul>
+            <li>CNN pipeline for real-time accident detection from CCTV feeds</li>
+            <li>Real-time monitoring logic and alert workflow</li>
+            <li>Focused on inference architecture and system integration</li>
+          </ul>
+          <a class="entry-link" href="https://github.com/SDPhoton/Accident-Detection-Project" target="_blank">
+            View on GitHub →
+          </a>
+        </div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">IoT Indoor Gardening System</span>
+          </div>
+          <ul>
+            <li>Sensor-based automation system</li>
+            <li>Firebase backend with monitoring dashboard</li>
+            <li>Environmental control logic implementation</li>
+          </ul>
+          <a class="entry-link" href="https://github.com/SDPhoton/Indoor-Gardening-System-IoT" target="_blank">
+            View on GitHub →
+          </a>
+        </div>
+
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-title">Artist Management Database System</span>
+          </div>
+          <ul>
+            <li>Django + MySQL backend with full CRUD logic</li>
+            <li>Schema design and structured information retrieval</li>
+          </ul>
+          <a class="entry-link" href="https://github.com/SDPhoton/DBMS-Project" target="_blank">
+            View on GitHub →
+          </a>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>Sagar Dhakal — CV</span>
+    <span>© 2026</span>
+  </footer>
 
 </div>
 </body>
